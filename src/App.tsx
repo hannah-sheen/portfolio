@@ -1,98 +1,97 @@
 import { useState } from 'react'
-import Lanyard from './components/Lanyard'
-import forLanyard from './assets/images/for_lanyard.jpg'
-import CardSwap, { Card } from './components/CardSwap'
+import Home from './pages/home.tsx'
+import About from './pages/about.tsx'
+import Contact from './pages/contact.tsx'
+import Experience from './pages/experience.tsx'
 
-function makeNameImage(): string {
-  const canvas = document.createElement('canvas')
-  canvas.width = 600
-  canvas.height = 800
-  const ctx = canvas.getContext('2d')!
-  ctx.fillStyle = '#111827'
-  ctx.fillRect(0, 0, 600, 800)
-  ctx.fillStyle = '#ffffff'
-  ctx.font = 'bold 64px Manrope, system-ui, sans-serif'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillText('Hello', 300, 360)
-  ctx.fillText('Sheen', 300, 440)
-  return canvas.toDataURL()
-}
+const navLinks = [
+  { label: 'Home', target: '#home' },
+  { label: 'About Me', target: '#about' },
+  { label: 'Experience', target: '#experience'},
+  { label: 'Projects', target: '#work' },
+  { label: 'Skills', target: '#skills' },
+  { label: 'Contact Me', target: '#contact' }
+]
 
-const backImage = makeNameImage()
-const navLinks = ['About', 'Work', 'Skills', 'Contact']
+const socialLinks = [
+  { id: 'github', url: 'https://github.com/hannah-sheen', icon: <path strokeLinecap="round" strokeLinejoin="round" d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /> },
+  { id: 'linkedin', url: 'https://www.linkedin.com/in/hannah-sheen-obejero-8a44b63a4', icon: <path strokeLinecap="round" strokeLinejoin="round" d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" /> },
+  { 
+    id: 'instagram', 
+    url: 'https://www.instagram.com/haruuxnna_/', 
+    icon: (
+      <>
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01" />
+      </>
+    ) 
+  },
+  { id: 'facebook', url: 'https://www.facebook.com/missmaem', icon: <path strokeLinecap="round" strokeLinejoin="round" d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /> }
+]
 
-function App() {
+export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [chatOpen, setChatOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
-  // Auto-collapses the sub-menus if the user leaves the overall controls area entirely
   const handleMouseLeave = () => {
     setIsHovered(false)
     setMenuOpen(false)
     setChatOpen(false)
   }
 
+  const handleNavClick = (target: string) => {
+    setMenuOpen(false)
+    setIsHovered(false)
+    const element = document.querySelector(target)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   return (
-    <div className="flex w-full h-screen overflow-hidden" style={{ fontFamily: "'Manrope', sans-serif" }}>
+    <div className="w-full min-h-screen bg-[#030712] text-white overflow-x-hidden relative">
+      
+      <Home />
+      <About />
+      <Experience />
+      <Contact/>
 
-      {/* Lanyard — left half */}
-      <div className="w-1/2 h-full relative overflow-hidden">
-        <div className="absolute inset-0 -mt-30 h-[110%]">
-          <Lanyard position={[0, 0, 15]} gravity={[0, -40, 0]} frontImage={forLanyard} backImage={backImage} imageFit="contain" cardName="Hannah Sheen" />
-        </div>
-        <div className="absolute left-8 right-8 bottom-8 text-slate-300 pointer-events-none">
-          <p className="text-2xl font-semibold text-white leading-tight pointer-events-auto">
-            Hi, I'm <span className="text-indigo-300">Hannah Sheen</span>.
-          </p>
-          <p className="mt-3 text-sm leading-7 pointer-events-auto">
-            I design and develop high-performing interactive experiences that solve real-world problems. Merging clean code with intuitive design, I help brands stand out in the digital space.
-          </p>
-          <p className="mt-4 text-xs uppercase tracking-[0.25em] font-semibold text-indigo-300 pointer-events-auto">
-            Currently open to new opportunities.
-          </p>
-        </div>
+      {/* FIXED SIDEBAR: Social Media Accounts */}
+      <div className="fixed left-6 bottom-0 z-50 flex flex-col items-center gap-5 after:content-[''] after:w-[1px] after:h-24 after:bg-gradient-to-b after:from-slate-700/80 after:to-transparent">
+        {socialLinks.map((social) => (
+          <a
+            key={social.id}
+            href={social.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-slate-500 hover:text-indigo-400 hover:-translate-y-0.5 transition-all duration-300"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              {social.icon}
+            </svg>
+          </a>
+        ))}
       </div>
 
-      {/* CardSwap — right half */}
-      <div className="w-1/2 h-full flex items-center justify-center">
-        <div style={{ width: 840, height: 620, position: 'relative' }}>
-          <CardSwap cardDistance={96} verticalDistance={110} delay={5000} pauseOnHover={false} width={840} height={620}>
-            <Card customClass="bg-slate-950/90 text-white p-12 shadow-[0_36px_120px_-36px_rgba(15,23,42,0.9)]">
-              <h3 className="text-4xl font-semibold mb-5">Interactive design</h3>
-              <p className="text-xl leading-relaxed text-slate-300">Modern UI transitions and motion-driven experiences.</p>
-            </Card>
-            <Card customClass="bg-slate-950/90 text-white p-12 shadow-[0_36px_120px_-36px_rgba(15,23,42,0.9)]">
-              <h3 className="text-4xl font-semibold mb-5">Performance-first</h3>
-              <p className="text-xl leading-relaxed text-slate-300">Fast animations, smooth interactions, and real-time responsiveness.</p>
-            </Card>
-            <Card customClass="bg-slate-950/90 text-white p-12 shadow-[0_36px_120px_-36px_rgba(15,23,42,0.9)]">
-              <h3 className="text-4xl font-semibold mb-5">Creative systems</h3>
-              <p className="text-xl leading-relaxed text-slate-300">Thoughtful brand experiences backed by solid engineering.</p>
-            </Card>
-          </CardSwap>
-        </div>
-      </div>
-
-      {/* New Centered Floating Dock System */}
+      {/* GLOBAL FLOATING CENTER DOCK SYSTEM */}
       <div
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center p-4"
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center px-24 py-4"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
       >
         <div className="relative flex items-center justify-center w-14 h-14">
 
-          {/* CHATBOT BUTTON (Deploys leftward on hover) */}
+          {/* CHATBOT BUTTON */}
           <div
             className="absolute transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
             style={{
               opacity: isHovered ? 1 : 0,
-              transform: isHovered ? 'translateX(-64px) scale(1)' : 'translateX(0px) scale(0.4)',
-              pointerEvents: isHovered ? 'auto' : 'none',
+              transform: isHovered ? 'translateX(-68px) scale(1)' : 'translateX(0px) scale(0.4)',
+              pointerEvents: isHovered || chatOpen ? 'auto' : 'none',
             }}
           >
-            {/* Chat window — relative to button parent context */}
+            {/* Chat Window */}
             <div
               className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 rounded-2xl overflow-hidden border border-white/12 bg-[#0f172a]/95 backdrop-blur-md shadow-2xl"
               style={{
@@ -127,7 +126,7 @@ function App() {
 
             <button
               onClick={() => { setChatOpen(o => !o); setMenuOpen(false) }}
-              className="w-12 h-12 rounded-2xl flex items-center justify-center bg-[#1e293b] border border-white/10 hover:border-indigo-400/50 hover:bg-[#1e293b]/80 transition-all shadow-lg"
+              className="w-12 h-12 rounded-2xl flex items-center justify-center bg-[#1e293b] border border-white/10 hover:border-indigo-400/50 hover:bg-[#1e293b]/80 transition-all shadow-lg cursor-pointer"
             >
               <svg className="w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -135,42 +134,24 @@ function App() {
             </button>
           </div>
 
-          {/* GLOWING CENTER ICON / TRIGGER */}
+          {/* GLOWING CENTER CORE */}
           <div className="relative z-10 w-12 h-12 flex items-center justify-center pointer-events-none">
-            {/* Soft Ambient Radial Background Glow */}
-            <div 
-              className={`absolute inset-0 rounded-full blur-xl transition-all duration-500 ${
-                isHovered ? 'bg-indigo-500/10 scale-75' : 'bg-indigo-500/40 scale-110 animate-pulse'
-              }`} 
-            />
-            
-            {/* Glowing Active Visual Ring */}
-            <div 
-              className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-500 shadow-xl ${
-                isHovered 
-                  ? 'bg-slate-900/60 border-white/10 scale-90' 
-                  : 'bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 border-indigo-400/40 shadow-[0_0_20px_rgba(99,102,241,0.55)] scale-100'
-              }`}
-            >
-              {/* Dynamic Inner core shape */}
-              <div 
-                className={`rounded-full transition-all duration-500 ${
-                  isHovered ? 'w-2 h-2 bg-slate-500' : 'w-3 h-3 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]'
-                }`} 
-              />
+            <div className={`absolute inset-0 rounded-full blur-xl transition-all duration-500 ${isHovered ? 'bg-indigo-500/10 scale-75' : 'bg-indigo-500/40 scale-110 animate-pulse'}`} />
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-500 shadow-xl ${isHovered ? 'bg-slate-900/60 border-white/10 scale-90' : 'bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 border-indigo-400/40 shadow-[0_0_20px_rgba(99,102,241,0.55)] scale-100'}`}>
+              <div className={`rounded-full transition-all duration-500 ${isHovered ? 'w-2 h-2 bg-slate-500' : 'w-3 h-3 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]'}`} />
             </div>
           </div>
 
-          {/* MENU BUTTON (Deploys rightward on hover) */}
+          {/* NAVIGATION MENU BUTTON */}
           <div
             className="absolute transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
             style={{
               opacity: isHovered ? 1 : 0,
-              transform: isHovered ? 'translateX(64px) scale(1)' : 'translateX(0px) scale(0.4)',
-              pointerEvents: isHovered ? 'auto' : 'none',
+              transform: isHovered ? 'translateX(68px) scale(1)' : 'translateX(0px) scale(0.4)',
+              pointerEvents: isHovered || menuOpen ? 'auto' : 'none',
             }}
           >
-            {/* Nav menu item stack panels */}
+            {/* Popover Nav Links System */}
             <div
               className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 flex flex-col items-center gap-2"
               style={{
@@ -182,17 +163,18 @@ function App() {
             >
               {navLinks.map(link => (
                 <button
-                  key={link}
-                  className="px-5 py-2 rounded-xl text-sm font-medium text-white bg-white/10 backdrop-blur-md border border-white/15 hover:bg-indigo-500/30 hover:border-indigo-400/40 transition-all shadow-lg w-32 text-center"
+                  key={link.label}
+                  onClick={() => handleNavClick(link.target)}
+                  className="px-5 py-2 rounded-xl text-sm font-medium text-white bg-white/10 backdrop-blur-md border border-white/15 hover:bg-indigo-500/30 hover:border-indigo-400/40 transition-all shadow-lg w-32 text-center cursor-pointer"
                 >
-                  {link}
+                  {link.label}
                 </button>
               ))}
             </div>
 
             <button
               onClick={() => { setMenuOpen(o => !o); setChatOpen(false) }}
-              className="w-12 h-12 rounded-2xl flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 transition-all shadow-lg border border-indigo-500/50"
+              className="w-12 h-12 rounded-2xl flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 transition-all shadow-lg border border-indigo-500/50 cursor-pointer"
             >
               <svg
                 className="w-5 h-5 text-white transition-transform duration-300"
@@ -213,5 +195,3 @@ function App() {
     </div>
   )
 }
-
-export default App
