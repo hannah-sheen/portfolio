@@ -3,6 +3,7 @@ import Home from './pages/home.tsx'
 import About from './pages/about.tsx'
 import Contact from './pages/contact.tsx'
 import Experience from './pages/experience.tsx'
+import Skills from './pages/skills.tsx'
 
 const navLinks = [
   { label: 'Home', target: '#home' },
@@ -55,6 +56,7 @@ export default function App() {
       <Home />
       <About />
       <Experience />
+      <Skills/>
       <Contact/>
 
       {/* FIXED SIDEBAR: Social Media Accounts */}

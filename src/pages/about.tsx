@@ -193,7 +193,7 @@ export default function About() {
                 animationMode="evenodd"
                 duration={0.6}
                 stagger={0.035}
-                className="text-4xl md:text-5xl font-extralight text-slate-400 italic tracking-wide leading-none"
+                className="text-4xl md:text-5xl font-extralight text-indigo-300 italic tracking-wide leading-none"
                 style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
               />
               <div className="h-[1px] flex-1 bg-gradient-to-r from-slate-700/60 to-transparent ml-2 opacity-50 hidden sm:block" />
@@ -202,7 +202,7 @@ export default function About() {
 
           {/* Narrative Copy - Upgraded slightly to matching text dimensions */}
           <div className="max-w-xl space-y-8">
-            <p className="text-xl md:text-2xl font-medium leading-relaxed text-slate-200 tracking-tight">
+            <p className="text-xl md:text-2xl font-light leading-relaxed text-slate-200 tracking-tight">
               I am a full-stack developer who naturally gravitates toward the backend. I enjoy exploring server architectures, writing logic, and discovering how structured data connects seamlessly behind the scenes.
             </p>
             
