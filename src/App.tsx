@@ -4,12 +4,13 @@ import About from './pages/about.tsx'
 import Contact from './pages/contact.tsx'
 import Experience from './pages/experience.tsx'
 import Skills from './pages/skills.tsx'
+import Projects from './pages/projects.tsx'
 
 const navLinks = [
   { label: 'Home', target: '#home' },
   { label: 'About Me', target: '#about' },
   { label: 'Experience', target: '#experience'},
-  { label: 'Projects', target: '#work' },
+  { label: 'Projects', target: '#projects' },
   { label: 'Skills', target: '#skills' },
   { label: 'Contact Me', target: '#contact' }
 ]
@@ -56,6 +57,7 @@ export default function App() {
       <Home />
       <About />
       <Experience />
+      <Projects />
       <Skills/>
       <Contact/>
 
@@ -78,24 +80,25 @@ export default function App() {
 
       {/* GLOBAL FLOATING CENTER DOCK SYSTEM */}
       <div
-        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center px-24 py-4"
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 p-4 transition-all duration-300"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="relative flex items-center justify-center w-14 h-14">
+        {/* Unified Flex Container to keep mouse inside hover bounds cleanly */}
+        <div className="flex items-center justify-center gap-6 relative">
 
           {/* CHATBOT BUTTON */}
           <div
-            className="absolute transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+            className="relative transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] z-20"
             style={{
               opacity: isHovered ? 1 : 0,
-              transform: isHovered ? 'translateX(-68px) scale(1)' : 'translateX(0px) scale(0.4)',
+              transform: isHovered ? 'translateX(0px) scale(1)' : 'translateX(25px) scale(0.4)',
               pointerEvents: isHovered || chatOpen ? 'auto' : 'none',
             }}
           >
             {/* Chat Window */}
             <div
-              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 rounded-2xl overflow-hidden border border-white/12 bg-[#0f172a]/95 backdrop-blur-md shadow-2xl"
+              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-5 w-72 rounded-2xl overflow-hidden border border-white/10 bg-[#0f172a]/95 backdrop-blur-md shadow-2xl"
               style={{
                 opacity: chatOpen ? 1 : 0,
                 transform: chatOpen ? 'translateY(0)' : 'translateY(8px)',
@@ -137,7 +140,7 @@ export default function App() {
           </div>
 
           {/* GLOWING CENTER CORE */}
-          <div className="relative z-10 w-12 h-12 flex items-center justify-center pointer-events-none">
+          <div className="w-14 h-14 flex items-center justify-center shrink-0 relative z-10">
             <div className={`absolute inset-0 rounded-full blur-xl transition-all duration-500 ${isHovered ? 'bg-indigo-500/10 scale-75' : 'bg-indigo-500/40 scale-110 animate-pulse'}`} />
             <div className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-500 shadow-xl ${isHovered ? 'bg-slate-900/60 border-white/10 scale-90' : 'bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 border-indigo-400/40 shadow-[0_0_20px_rgba(99,102,241,0.55)] scale-100'}`}>
               <div className={`rounded-full transition-all duration-500 ${isHovered ? 'w-2 h-2 bg-slate-500' : 'w-3 h-3 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]'}`} />
@@ -146,16 +149,16 @@ export default function App() {
 
           {/* NAVIGATION MENU BUTTON */}
           <div
-            className="absolute transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+            className="relative transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] z-20"
             style={{
               opacity: isHovered ? 1 : 0,
-              transform: isHovered ? 'translateX(68px) scale(1)' : 'translateX(0px) scale(0.4)',
+              transform: isHovered ? 'translateX(0px) scale(1)' : 'translateX(-25px) scale(0.4)',
               pointerEvents: isHovered || menuOpen ? 'auto' : 'none',
             }}
           >
             {/* Popover Nav Links System */}
             <div
-              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 flex flex-col items-center gap-2"
+              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-5 flex flex-col items-center gap-2"
               style={{
                 opacity: menuOpen ? 1 : 0,
                 transform: menuOpen ? 'translateY(0)' : 'translateY(8px)',
