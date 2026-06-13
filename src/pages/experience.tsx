@@ -1,4 +1,4 @@
-import { useState, useRef, type MouseEvent, useEffect } from 'react'
+import { useState, useRef, type MouseEvent, type TouchEvent, useEffect } from 'react'
 import Shuffle from '../components/Shuffle'
 
 interface ExperienceNode {
@@ -98,11 +98,32 @@ export default function Experience() {
     setTimeout(() => {
       focusOnCoordinates(firstNode.x, firstNode.y, 1.1)
     }, 150)
+    // Cleanup global state flags if the component unmounts unexpectedly while dragging
+    return () => { document.body.setAttribute('data-dragging', 'false') }
   }, [])
 
-  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest('.data-card')) return
+  // Track dynamic changes to state and relay them immediately to GSAP's Observer engine via document body attributes
+  const startGlobalDragState = () => {
     setIsDragging(true)
+    document.body.setAttribute('data-dragging', 'true')
+  }
+
+  const stopGlobalDragState = () => {
+    setIsDragging(false)
+    document.body.setAttribute('data-dragging', 'false')
+  }
+
+  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    // ONLY bail out early if clicking inside an active description data-card
+    if ((e.target as HTMLElement).closest('.data-card')) return
+    
+    // If clicking a node pivot button, don't preventDefault so the onClick event can fire cleanly
+    const isButton = (e.target as HTMLElement).closest('button')
+    if (!isButton) {
+      e.preventDefault()
+    }
+    
+    startGlobalDragState()
     setHasDragged(false)
     setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y })
   }
@@ -116,7 +137,24 @@ export default function Experience() {
     })
   }
 
-  const handleMouseUp = () => setIsDragging(false)
+  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('.data-card')) return
+    
+    const touch = e.touches[0]
+    startGlobalDragState()
+    setHasDragged(false)
+    setDragStart({ x: touch.clientX - pan.x, y: touch.clientY - pan.y })
+  }
+
+  const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+    if (!isDragging) return
+    const touch = e.touches[0]
+    setHasDragged(true)
+    setPan({
+      x: touch.clientX - dragStart.x,
+      y: touch.clientY - dragStart.y
+    })
+  }
 
   const handleNodeClick = (node: ExperienceNode) => {
     if (hasDragged) return
@@ -135,9 +173,12 @@ export default function Experience() {
       ref={containerRef}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      className={`w-full h-screen bg-[#030712] relative overflow-hidden select-none ${
+      onMouseUp={stopGlobalDragState}
+      onMouseLeave={stopGlobalDragState}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={stopGlobalDragState}
+      className={`w-full h-screen bg-[#030712] relative overflow-hidden select-none touch-none ${
         isDragging ? 'cursor-grabbing' : 'cursor-grab'
       }`}
       style={{ fontFamily: "'Manrope', sans-serif" }}
@@ -239,7 +280,6 @@ export default function Experience() {
 
                   <div className="space-y-3">
                     <div>
-                      {/* FIXED: Title and Year are now structured together on the top line */}
                       <div className="flex items-center justify-between gap-2">
                         <h3 className="text-xs font-bold text-white tracking-tight leading-tight">
                           {node.role}
@@ -249,7 +289,6 @@ export default function Experience() {
                         </span>
                       </div>
                       
-                      {/* Company Name moves cleanly below the title line */}
                       <div className="text-[10px] font-mono mt-1">
                         <span className="text-slate-400 font-semibold opacity-80">
                           {node.company}

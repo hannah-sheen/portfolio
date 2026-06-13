@@ -23,62 +23,17 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="w-full h-screen bg-[#030712] relative overflow-hidden flex" style={{ fontFamily: "'Manrope', sans-serif" }}>
-      
+    <section 
+      id="contact" 
+      className="w-full h-screen bg-[#030712] relative overflow-hidden flex" 
+      style={{ fontFamily: "'Manrope', sans-serif" }}
+    >      
       {/* Background Soft Ambient Light Layers */}
       <div className="absolute right-0 bottom-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute left-1/4 top-1/4 w-72 h-72 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* LEFT SIDE: Editorial Text Block (w-1/2 split to match Home and About) */}
-      <div className="w-1/2 h-full relative overflow-hidden border-r border-white/5 flex flex-col justify-between p-16 md:p-20 select-none">
-        
-        {/* Top Spacer */}
-        <div className="h-6" />
-
-        {/* Scaled Headers - Now utilizing the spacious left viewport column */}
-        <div className="relative space-y-1 w-full z-20 my-auto">
-          <div className="overflow-hidden py-1">
-            <Shuffle
-              text="LET'S BUILD"
-              tag="h2"
-              textAlign="left"
-              shuffleDirection="right"
-              animationMode="evenodd"
-              duration={0.6}
-              stagger={0.03}
-              className="text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none"
-              style={{ fontWeight: 950 }}
-            />
-          </div>
-          <div className="overflow-hidden py-1 flex items-center gap-4">
-            <Shuffle
-              text="Something Real."
-              tag="span"
-              textAlign="left"
-              shuffleDirection="right"
-              animationMode="evenodd"
-              duration={0.6}
-              stagger={0.035}
-              className="block text-5xl md:text-6xl font-extralight text-indigo-300 italic tracking-wide leading-none"
-              style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
-            />
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-slate-700/60 to-transparent ml-2 opacity-50 hidden sm:block" />
-          </div>
-
-          <p className="text-lg md:text-xl font-light text-slate-400 max-w-md pt-6 normal-case leading-relaxed">
-            Whether you need to architect a robust backend infrastructure, map out a complex database scheme, or roll out an enterprise full-stack system, let's talk.
-          </p>
-        </div>
-
-        {/* Left Side Footer Indicator */}
-        <div className="mt-12 md:mt-0 space-y-2 border-l-2 border-indigo-500/30 pl-4 py-1">
-          <div className="text-[10px] tracking-wider text-slate-500 uppercase font-bold">Current Base</div>
-          <div className="text-xs font-semibold text-slate-300">Philippines</div>
-        </div>
-      </div>
-
-      {/* RIGHT SIDE: Full-Scale Interactive Form Block (w-1/2 split) */}
-      <div className="w-1/2 h-full flex flex-col justify-between p-16 md:p-20 relative z-20 bg-[#030712]">
+      {/* LEFT SIDE: Full-Scale Interactive Form Block (w-1/2 split) */}
+      <div className="w-1/2 h-full flex flex-col justify-between p-16 md:p-20 relative z-20 bg-[#030712] border-r border-white/5">
         
         {/* Top Spacer */}
         <div className="h-6" />
@@ -154,9 +109,57 @@ export default function Contact() {
           </form>
         </div>
 
-        {/* Right Side Bottom Balancing Border/Spacer */}
-        <div className="border-t border-white/5 pt-6 w-full opacity-0 pointer-events-none">
+        {/* Left Side Bottom Balancing Spacer */}
+        <div className="pt-6 w-full opacity-0 pointer-events-none">
           <span className="text-xs text-slate-600">Spacer Alignment</span>
+        </div>
+      </div>
+
+      {/* RIGHT SIDE: Editorial Text Block (w-1/2 split) */}
+      <div className="w-1/2 h-full relative overflow-hidden flex flex-col justify-between p-16 md:p-20 select-none">
+        
+        {/* Top Spacer */}
+        <div className="h-6" />
+
+        {/* Scaled Headers - Now utilizing the spacious right viewport column */}
+        <div className="relative space-y-1 w-full z-20 my-auto">
+          <div className="overflow-hidden py-1">
+            <Shuffle
+              text="LET'S BUILD"
+              tag="h2"
+              textAlign="left"
+              shuffleDirection="right"
+              animationMode="evenodd"
+              duration={0.6}
+              stagger={0.03}
+              className="text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none"
+              style={{ fontWeight: 950 }}
+            />
+          </div>
+          <div className="overflow-hidden py-1 flex items-center gap-4">
+            <Shuffle
+              text="Something Real."
+              tag="span"
+              textAlign="left"
+              shuffleDirection="right"
+              animationMode="evenodd"
+              duration={0.6}
+              stagger={0.035}
+              className="block text-5xl md:text-6xl font-extralight text-indigo-300 italic tracking-wide leading-none"
+              style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
+            />
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-slate-700/60 to-transparent ml-2 opacity-50 hidden sm:block" />
+          </div>
+
+          <p className="text-lg md:text-xl font-light text-slate-400 max-w-md pt-6 normal-case leading-relaxed">
+            Whether you need to architect a robust backend infrastructure, map out a complex database scheme, or roll out an enterprise full-stack system, let's talk.
+          </p>
+        </div>
+
+        {/* Right Side Footer Indicator */}
+        <div className="mt-12 md:mt-0 space-y-2 border-l-2 border-indigo-500/30 pl-4 py-1">
+          <div className="text-[10px] tracking-wider text-slate-500 uppercase font-bold">Current Base</div>
+          <div className="text-xs font-semibold text-slate-300">Philippines</div>
         </div>
       </div>
 
