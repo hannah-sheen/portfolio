@@ -240,8 +240,8 @@ const Shuffle: React.FC<ShuffleProps> = ({
           repeatDelay: loop ? loopDelay : 0,
           onRepeat: () => {
             if (scrambleCharset) randomizeScrambles();
-            if (isVertical) gsap.set(strips, { y: (i, t: HTMLElement) => parseFloat(t.getAttribute('data-start-y') || '0') });
-            else gsap.set(strips, { x: (i, t: HTMLElement) => parseFloat(t.getAttribute('data-start-x') || '0') });
+            if (isVertical) gsap.set(strips, { y: (_i, t: HTMLElement) => parseFloat(t.getAttribute('data-start-y') || '0') });
+            else gsap.set(strips, { x: (_i, t: HTMLElement) => parseFloat(t.getAttribute('data-start-x') || '0') });
             onShuffleComplete?.();
           },
           onComplete: () => {
@@ -257,8 +257,8 @@ const Shuffle: React.FC<ShuffleProps> = ({
 
         const addTween = (targets: HTMLElement[], at: number) => {
           const vars: any = { duration, ease, force3D: true, stagger: animationMode === 'evenodd' ? stagger : 0 };
-          if (isVertical) vars.y = (i: number, t: HTMLElement) => parseFloat(t.getAttribute('data-final-y') || '0');
-          else vars.x = (i: number, t: HTMLElement) => parseFloat(t.getAttribute('data-final-x') || '0');
+          if (isVertical) vars.y = (_i: number, t: HTMLElement) => parseFloat(t.getAttribute('data-final-y') || '0');
+          else vars.x = (_i: number, t: HTMLElement) => parseFloat(t.getAttribute('data-final-x') || '0');
           tl.to(targets, vars, at);
           if (colorFrom && colorTo) tl.to(targets, { color: colorTo, duration, ease }, at);
         };
