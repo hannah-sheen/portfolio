@@ -1,8 +1,9 @@
+import { useState, useEffect, useRef } from 'react'
 import Shuffle from '../components/Shuffle'
 import Lanyard from '../components/Lanyard'
 import forLanyard from '../assets/images/for_lanyard.jpg'
 
-// Dynamic ID card name generation function - fully restored
+// Dynamic ID card name generation function
 function makeNameImage(): string {
   const canvas = document.createElement('canvas')
   canvas.width = 600
@@ -23,25 +24,62 @@ function makeNameImage(): string {
 const backImage = makeNameImage()
 
 export default function About() {
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const [isAboutVisible, setIsAboutVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Set state flag true only when the element intersects the viewport viewport frame
+        setIsAboutVisible(entry.isIntersecting)
+      },
+      { 
+        // Fires immediately when even a tiny margin (10%) of the section steps onto the viewport frame
+        threshold: 0.1 
+      }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
   return (
-    <section id="about" className="w-full h-screen bg-[#030712] relative overflow-hidden flex" style={{ fontFamily: "'Manrope', sans-serif" }}>
+    <section 
+      id="about" 
+      ref={sectionRef}
+      className="w-full h-screen bg-[#030712] relative overflow-hidden flex" 
+      style={{ fontFamily: "'Manrope', sans-serif" }}
+    >
       
-      {/* LEFT SIDE: Interactive Lanyard Canvas (Fully Restored exactly how you had it) */}
+      {/* LEFT SIDE: Interactive Lanyard Canvas */}
       <div className="w-1/2 h-full relative overflow-hidden border-r border-white/5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.02)_0%,transparent_75%)] pointer-events-none" />
         <div className="absolute inset-0 -mt-30 h-[110%]">
-          <Lanyard 
-            position={[0, 0, 15]} 
-            gravity={[0, -40, 0]} 
-            frontImage={forLanyard} 
-            backImage={backImage} 
-            imageFit="contain" 
-            cardName="Hannah Sheen Obejero" 
-          />
+          {/* Only render the Lanyard component when the section is actively shown.
+            When it goes off-screen, it gets unmounted and stops the physics engine immediately.
+          */}
+          {isAboutVisible ? (
+            <Lanyard 
+              position={[0, 0, 15]} 
+              gravity={[0, -65, 0]} 
+              frontImage={forLanyard} 
+              backImage={backImage} 
+              imageFit="contain" 
+              cardName="Hannah Sheen Obejero" 
+            />
+          ) : (
+            // A subtle, placeholder background block to avoid blank layouts during layout transition calculation
+            <div className="w-full h-full bg-[#030712]" />
+          )}
         </div>
       </div>
 
-      {/* RIGHT SIDE: Narrative Content Block (Spaced and optimized for better utility) */}
+      {/* RIGHT SIDE: Narrative Content Block */}
       <div className="w-1/2 h-full relative z-10 flex flex-col justify-between p-16 md:p-20 select-none">
         
         {/* Top Alignment Holder */}
@@ -50,7 +88,7 @@ export default function About() {
         {/* Narrative Core Frame */}
         <div className="my-auto space-y-10">
           
-          {/* Header Section - Styled for bold editorial cohesion */}
+          {/* Header Section */}
           <div className="space-y-1">
             <div className="overflow-hidden py-1">
               <Shuffle
@@ -81,7 +119,7 @@ export default function About() {
             </div>
           </div>
 
-          {/* Narrative Copy - Upgraded slightly to matching text dimensions */}
+          {/* Narrative Copy */}
           <div className="max-w-xl space-y-8">
             <p className="text-xl md:text-2xl font-light leading-relaxed text-slate-200 tracking-tight">
               I am a full-stack developer who naturally gravitates toward the backend. I enjoy exploring server architectures, writing logic, and discovering how structured data connects seamlessly behind the scenes.
@@ -105,7 +143,7 @@ export default function About() {
 
         </div>
 
-        {/* Footer Row - Crisp layout metadata metrics mapping at the base */}
+        {/* Footer Row */}
         <div className="pt-6 border-t border-white/5 grid grid-cols-3 gap-4">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Location</p>
