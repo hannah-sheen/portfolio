@@ -12,13 +12,40 @@ export default function Contact() {
     setStatus('sending')
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      setStatus('success')
-      setEmail('')
-      setSubject('')
-      setMessage('')
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, subject, message }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setStatus('success')
+        setEmail('')
+        setSubject('')
+        setMessage('')
+        
+        // Automatically hide the status notification message after 3 seconds
+        setTimeout(() => {
+          setStatus('idle')
+        }, 3000)
+      } else {
+        setStatus('error')
+        // Clear error alert after 3 seconds as well
+        setTimeout(() => {
+          setStatus('idle')
+        }, 3000)
+      }
     } catch (error) {
+      console.error('Frontend message dispatch error:', error)
       setStatus('error')
+      // Clear network connection error alert after 3 seconds
+      setTimeout(() => {
+        setStatus('idle')
+      }, 3000)
     }
   }
 

@@ -301,8 +301,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
 
       const st = ScrollTrigger.create({ trigger: el, start, once: triggerOnce, onEnter: create });
 
-      return () => { st.kill(); removeHover(); teardown(); setReady(false); };
-    },
+      return () => { st.kill(); removeHover(); teardown();  };  },
     {
       dependencies: [text, duration, maxDelay, ease, scrollTriggerStart, fontsLoaded, shuffleDirection, shuffleTimes, animationMode, loop, loopDelay, stagger, scrambleCharset, colorFrom, colorTo, triggerOnce, respectReducedMotion, triggerOnHover, onShuffleComplete],
       scope: ref
