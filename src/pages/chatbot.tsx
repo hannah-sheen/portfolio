@@ -73,23 +73,28 @@ export default function Chatbot({ isOpen, onClose }: ChatbotProps) {
     setInputValue("");
     setIsLoading(true);
 
-    try {
-      // 💡 Clean relative routing inside your Vercel project ecosystem
+   try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: query }), 
+        body: JSON.stringify({ message: query }),
       });
 
-      if (!response.ok) throw new Error("Server connection failure");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Server connection failure");
+      }
       
       const data = await response.json();
       setMessages(prev => [...prev, { id: botMsgId, sender: 'bot', text: data.reply }]);
     } catch (error) {
       console.error("Chat Router Error:", error);
-      setMessages(prev => [...prev, { id: botMsgId, sender: 'bot', text: "Systems offline. Unable to reach the knowledge matrix." }]);
-    } finally {
-      setIsLoading(false);
+      // Show more specific error message
+      setMessages(prev => [...prev, { 
+        id: botMsgId, 
+        sender: 'bot', 
+        text: error instanceof Error ? `Error: ${error.message}` : "Systems offline. Unable to reach the knowledge matrix." 
+      }]);
     }
   };
     
