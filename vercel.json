@@ -2,8 +2,8 @@
   "version": 2,
   "routes": [
     {
-      "src": "/api/chat",
-      "dest": "/api/chat"
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
     },
     {
       "src": "/(.*)",
