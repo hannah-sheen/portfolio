@@ -1,11 +1,21 @@
-import 'dotenv/config'; // Automatically loads your .env variables
+import 'dotenv/config'; // Automatically loads your .env variables during local testing
 import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer'; 
-import { GoogleGenAI } from '@google/genai'; // 💡 New: Safe backend AI entry
+import { GoogleGenAI } from '@google/genai'; 
 
 const app = express();
-app.use(cors());
+
+// 💡 PRODUCTION CORS CONFIGURATION:
+// This authenticates your live frontend URL and allows local development sync
+app.use(cors({
+  origin: [
+    'http://localhost:5173', 
+    'https://portfolio-lyart-nu-79.vercel.app'
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Initialize AI securely using your hidden system environment variable
@@ -68,7 +78,7 @@ PROFILE META:
 - Facebook: https://www.facebook.com/missmaem
 `;
 
-// Reusable Transporter from your nodemailer-setup.md
+// Reusable Transporter setup
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
   port: Number(process.env.MAIL_PORT),
@@ -79,13 +89,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Verify mail server connection on startup
-transporter.verify((err) => {
-  if (err) console.error('Mail server connection failed:', err);
-  else console.log('Mail server ready to send emails');
-});
-
-// 💡 NEW: High-performance AI Router
+// AI Knowledge Engine Endpoint
 app.post('/api/chat', async (req, res) => {
   try {
     const { message } = req.body;
@@ -112,7 +116,7 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// The API endpoint your Vite contact form will send data to
+// Email Contact Pipeline Endpoint
 app.post('/api/contact', async (req, res) => {
   try {
     const { email, subject, message } = req.body;
@@ -178,6 +182,11 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// Start the server on port 5000
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Backend server running on http://localhost:${PORT}`));
+// 💡 Local environment development runner option
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Backend tracking local runtime on port ${PORT}`));
+}
+
+// Export the module application layout directly for Vercel
+export default app;
