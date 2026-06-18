@@ -1,5 +1,28 @@
-import { useState, type MouseEvent } from 'react'
-import Shuffle from '../components/Shuffle'
+import { useState, useRef, useEffect } from 'react';
+import type { MouseEvent, WheelEvent } from 'react';
+import Shuffle from '../components/Shuffle';
+import { InfoCard } from '../components/InfoCard';
+
+import imgCiudad from '../assets/projects/ciudad.png';
+import imgCiudad2 from '../assets/projects/ciudad(2).png';
+import imgCiudad3 from '../assets/projects/ciudad(3).png';
+
+import imgTheArchivist from '../assets/projects/tas.jpeg'; 
+import imgTheArchivist2 from '../assets/projects/tas(2).png';
+import imgTheArchivist3 from '../assets/projects/tas(3).png'; 
+
+import imgQuizOdyssey from '../assets/projects/quiz_odessey.png';
+import imgQuizOdyssey2 from '../assets/projects/quiz_odessey(2).png';
+import imgQuizOdyssey3 from '../assets/projects/quiz_odessey(3).png';
+import imgQuizOdyssey4 from '../assets/projects/quiz_odessey(4).png';
+
+import imgLifewood from '../assets/projects/lifewood-website.png';
+import imgLifewood2 from '../assets/projects/lifewood-website(2).png';
+import imgLifewood3 from '../assets/projects/lifewood-website(3).png';
+
+import imgPfc from '../assets/projects/PFCSystem.png';
+import imgPfc2 from '../assets/projects/PFCSystem(2).png';
+import imgPfc3 from '../assets/projects/PFCSystem(3).png';
 
 interface ProjectItem {
   id: string;
@@ -7,282 +30,363 @@ interface ProjectItem {
   title: string;
   company: string;
   description: string;
-  bullets: string[];
+  challenge: string;
+  solution: string;
   stack: string[];
+  images: string[]; 
   github?: string;
-  article?: string; // New clean parameter for external news verification links
+  article?: string;
 }
 
 const projectsData: ProjectItem[] = [
   {
     id: "proj-1",
-    tag: "0x01",
+    tag: "01",
     title: "CIUDAD (BARIOS)",
     company: "Brgy. San Roque",
-    description: "Full-stack administrative web and mobile platform featuring real-time data orchestration and automated document lifecycles.",
-    bullets: [
-      "Built a full-stack barangay management system with automated document generation and pre-filled certification templates, reducing manual processing time by 80%.",
-      "Designed a centralized PostgreSQL database with real-time REST APIs, enabling seamless data access across web and mobile applications.",
-      "Partnered with CTU Main CCICT extension teams to conduct digital skills and operational training for barangay personnel, as featured in official university media."
-    ],
+    description: "A comprehensive full-stack administrative platform featuring real-time data orchestration and automated document lifecycles.",
+    challenge: "Processing high concurrent data requests for official local paperwork while keeping records secure and synchronization smooth in weak cellular areas.",
+    solution: "Engineered an asynchronous transactional query pipeline using Django and PostgreSQL, backed by offline-first local storage engines in React Native.",
     stack: ["React", "React Native", "TypeScript", "Python", "Django", "PostgreSQL"],
+    images: [imgCiudad, imgCiudad2, imgCiudad3],
     github: "https://github.com/hannah-sheen/CIUDAD-APP-BARIOS",
-    article: "https://www.ctu.edu.ph/ctu-main-ccict-equips-barangay-san-roque-personnel-with-essential-digital-skills/" // Add your official article link here
+    article: "https://www.ctu.edu.ph/ctu-main-ccict-equips-barangay-san-roque-personnel-with-essential-digital-skills/"
   },
   {
     id: "proj-2",
-    tag: "0x02",
-    title: "Face Recognition Profiling",
-    company: "Cebu Technological University",
-    description: "Deep learning identity suite tailored for fast embedding evaluation and secure storage arrays.",
-    bullets: [
-      "Developed a facial recognition system for identity verification and profiling using the FaceNet deep learning model.",
-      "Implemented a secure database for storing and managing facial embeddings and user data, ensuring data privacy and compliance."
-    ],
-    stack: ["React", "JavaScript", "Python", "Node.js", "NoSQL", "FaceNet"],
-    github: "https://github.com/hannah-sheen/Face-Recognition-Profiling"
+    tag: "02",
+    title: "The Archivist's Silence",
+    company: "Lifewood Data Technology PH",
+    description: "2D isometric tactical puzzle game exploring desolate structural ruins with generative asset loops.",
+    challenge: "Generating complex, predictable tile layouts dynamically at runtime without causing frame drops or disrupting AI pathfinding logic.",
+    solution: "Wrote custom graph-traversal cellular automata directly in GDScript and integrated Gemini AI APIs into the pre-build pipeline to seed unique item variations.",
+    stack: ["Godot", "GDScript", "Kenney Assets", "Gemini AI"],
+    images: [imgTheArchivist, imgTheArchivist2, imgTheArchivist3],
+    github: "https://github.com/hannah-sheen"
   },
   {
     id: "proj-3",
-    tag: "0x03",
+    tag: "03",
     title: "Quiz Odyssey",
-    company: "AI-Powered Generation",
+    company: "Cebu Technological University",
     description: "Generative educational tool built to streamline mock test authoring workflows dynamically.",
-    bullets: [
-      "Developed an AI-powered quiz maker built with native web structures to help students study by creating customized mock quizzes through automated Gemini AI prompts."
-    ],
+    challenge: "Handling unstructured, unpredictable raw text payloads from LLMs and converting them into reliable, zero-latency multi-choice interfaces.",
+    solution: "Enforced strict JSON output schemas via custom system instructions paired with a resilient, defensive parsing engine on the client application.",
     stack: ["HTML", "JavaScript", "Gemini AI", "CSS Engines"],
+    images: [imgQuizOdyssey, imgQuizOdyssey2, imgQuizOdyssey3, imgQuizOdyssey4],
     github: "https://github.com/hannah-sheen/PROJECT_QUIZODYSSEY"
   },
   {
     id: "proj-4",
-    tag: "0x04",
+    tag: "04",
     title: "Lifewood Website",
     company: "Lifewood Data Technology PH",
-    description: "Premium enterprise landing interface engineered with scalable modern frameworks and serverless backends.",
-    bullets: [
-      "Designed and deployed a highly performant corporate presence featuring dynamic resource modules and content mapping structures."
-    ],
+    description: "Premium enterprise landing interface engineered with scalable modern rendering frameworks and edge localized assets.",
+    challenge: "Maintaining a flawless visual look across viewports and handling multi-language localizations without inflating core web vital load speeds.",
+    solution: "Utilized Tailwind's utility architecture to reduce style footprints and deployed static assets directly through localized Supabase edge routers.",
     stack: ["React", "Tailwind CSS", "Supabase"],
+    images: [imgLifewood, imgLifewood2, imgLifewood3],
     github: "https://github.com/hannah-sheen/lifewood-Website"
   },
   {
     id: "proj-5",
-    tag: "0x05",
+    tag: "05",
     title: "PFC System",
     company: "People Fitness Center",
-    description: "Dedicated gym management system built to monitor membership conditions, log performance tracks, and optimize facility scheduling architectures.",
-    bullets: [
-      "Engineered an automated infrastructure backend using Python structures to manage client access passes, member state profiles, and administrative financial tallies cleanly."
-    ],
+    description: "Specialized fitness management platform built to monitor membership metrics, log performance tracks, and optimize space scheduling.",
+    challenge: "Preventing overlapping event assignments and resolving critical race conditions during high-volume check-in periods at the gym database.",
+    solution: "Designed a clean, isolated relational schema with targeted structural indexes to safely handle rapid status updates without query locking.",
     stack: ["Python", "Database Engine", "UI Layouts System"],
+    images: [imgPfc, imgPfc2, imgPfc3],
     github: "https://github.com/hannah-sheen/PFCSystem"
   }
-]
+];
 
 export default function Projects() {
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
-  const [spotlight, setSpotlight] = useState({ x: 0, y: 0, opacity: 0 })
+  const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
+  const [currentImgIndex, setCurrentImgIndex] = useState<number>(0);
+  const [isLightbox, setIsLightbox] = useState<boolean>(false);
+  
+  const [isDown, setIsDown] = useState(false);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleCardMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    setSpotlight({ x, y, opacity: 1 })
-  }
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const mouseStartPos = useRef({ x: 0, y: 0 });
 
-  const handleCardMouseLeave = () => {
-    setSpotlight(prev => ({ ...prev, opacity: 0 }))
-    setHoveredIdx(null)
-  }
+  useEffect(() => {
+    return () => {
+      document.body.setAttribute('data-dragging', 'false');
+    };
+  }, []);
+
+  const handleOpenProject = (project: ProjectItem) => {
+    setActiveProject(project);
+    setCurrentImgIndex(0);
+    setIsLightbox(false);
+  };
+
+  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    if (!scrollContainerRef.current) return;
+    setIsDown(true);
+    setIsDragging(false);
+    mouseStartPos.current = { x: e.clientX, y: e.clientY };
+    setScrollLeft(scrollContainerRef.current.scrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDown(false);
+    setIsDragging(false);
+    document.body.setAttribute('data-dragging', 'false');
+  };
+
+  const handleMouseUp = () => {
+    setIsDown(false);
+    setTimeout(() => {
+      setIsDragging(false);
+      document.body.setAttribute('data-dragging', 'false');
+    }, 50);
+  };
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!isDown || !scrollContainerRef.current) return;
+
+    const deltaX = Math.abs(e.clientX - mouseStartPos.current.x);
+    const deltaY = Math.abs(e.clientY - mouseStartPos.current.y);
+
+    if (deltaX > 8 || deltaY > 8) {
+      setIsDragging(true);
+      document.body.setAttribute('data-dragging', 'true');
+    }
+
+    if (isDragging) {
+      e.preventDefault();
+      const walkX = (e.clientX - mouseStartPos.current.x) * 1.5; 
+      scrollContainerRef.current.scrollLeft = scrollLeft - walkX;
+    }
+  };
+
+  const handleWheel = (e: WheelEvent<HTMLDivElement>) => {
+    if (scrollContainerRef.current) {
+      e.preventDefault();
+      scrollContainerRef.current.scrollLeft += e.deltaY;
+    }
+  };
 
   return (
     <section 
       id="projects" 
-      className="w-full h-screen bg-[#030712] text-white px-12 md:px-24 flex flex-col justify-between select-none relative overflow-hidden"
+      className="w-full h-screen bg-[#030712] text-white px-12 md:px-24 flex flex-col justify-between relative overflow-hidden"
       style={{ fontFamily: "'Manrope', sans-serif" }}
     >
-      {/* Background High-Tech Canvas Mesh */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-[size:45px_45px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.02)_0%,transparent_60%)]" />
       </div>
 
-      <div className="w-full h-full py-24 md:py-28 flex flex-col justify-between z-10 overflow-hidden">
+      <div className="w-full h-full py-12 md:py-16 flex flex-col justify-between z-10 overflow-hidden">
         
-        {/* ─── HUD HEADER COMPONENT LAYER (TOP RIGHT) ─── */}
+        {/* HEADER BLOCK */}
         <div className="w-full flex flex-col items-end text-right space-y-1 shrink-0">
           <div className="py-0.5 pointer-events-auto cursor-default">
-            <Shuffle
-              text="PROJECTS"
-              tag="h2"
-              textAlign="right"
-              shuffleDirection="left"
-              animationMode="evenodd"
-              duration={0.6}
-              stagger={0.03}
-              className="text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none pr-4 select-none"
-              style={{ fontWeight: 950 }}
-            />
+            <Shuffle text="PROJECTS" tag="h2" textAlign="right" shuffleDirection="left" className="text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none pr-4 select-none" style={{ fontWeight: 950 }} />
           </div>
           <div className="py-0.5 flex items-center justify-end gap-4 pointer-events-auto cursor-default w-full">
             <div className="h-[1px] flex-1 bg-gradient-to-l from-slate-700/60 to-transparent mr-2 opacity-50 hidden sm:block" />
-            <Shuffle
-              text="& Compiled Architecture"
-              tag="span"
-              textAlign="right"
-              shuffleDirection="left"
-              animationMode="evenodd"
-              duration={0.6}
-              stagger={0.035}
-              className="block text-4xl md:text-5xl font-extralight text-indigo-300 italic tracking-wide leading-none select-none"
-              style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
-            />
+            <Shuffle text="& Compiled Architecture" tag="span" textAlign="right" shuffleDirection="left" className="block text-4xl md:text-5xl font-extralight text-indigo-300 italic tracking-wide leading-none select-none" style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }} />
           </div>
-          <p className="text-sm leading-relaxed text-slate-400 font-medium max-w-xs pt-4 normal-case pointer-events-none">
+          <p className="text-sm leading-relaxed text-slate-400 font-medium max-w-xl pt-3 normal-case pointer-events-none">
             My architectural compilation engineering web platforms, intelligent identity profiling pipelines, and adaptive automated tools.
           </p>
         </div>
 
-        {/* ─── KINETIC MONOLITHIC MATRIX ARRAY ─── */}
-        <div className="w-full flex-1 flex items-stretch gap-4 mt-12 mb-2 overflow-hidden">
-          {projectsData.map((project, idx) => {
-            const isHovered = hoveredIdx === idx
-            const isAnyHovered = hoveredIdx !== null
-            
-            const flexWidth = isHovered 
-              ? 'flex-[3.5]' 
-              : isAnyHovered 
-                ? 'flex-[0.4]' 
-                : 'flex-1'
+        {/* DRAG TRACK FOR CARDS */}
+        <div 
+          ref={scrollContainerRef}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseLeave}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          onWheel={handleWheel}
+          className={`w-full flex-1 flex items-center gap-6 mt-4 mb-4 overflow-x-auto overflow-y-hidden pt-10 pb-4 px-2 select-none justify-start [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+            isDragging ? 'cursor-grabbing snap-none' : 'cursor-grab snap-x snap-mandatory scroll-smooth'
+          }`}
+        >
+          {projectsData.map((project) => (
+            <div key={project.id} className="pointer-events-auto py-4 snap-center shrink-0">
+              <InfoCard
+                tag={project.tag}
+                title={project.title}
+                company={project.company}
+                description={project.description}
+                backgroundImage={project.images[0]}
+                onClick={() => handleOpenProject(project)}
+              />
+            </div>
+          ))}
+        </div>
 
-            return (
-              <div
-                key={project.id}
-                onMouseEnter={() => setHoveredIdx(idx)}
-                onMouseMove={handleCardMouseMove}
-                onMouseLeave={handleCardMouseLeave}
-                style={{
-                  transition: 'flex 0.5s cubic-bezier(0.25, 1, 0.4, 1), border-color 0.3s, opacity 0.4s'
-                }}
-                className={`h-full border rounded-2xl bg-[#050914]/30 backdrop-blur-md p-6 md:p-8 flex flex-col justify-between relative overflow-hidden ${
-                  isHovered 
-                    ? 'border-indigo-500/30 bg-[#060b1a]/80 shadow-[0_20px_50px_rgba(0,0,0,0.5)] opacity-100 z-20' 
-                    : 'border-white/5 opacity-30 z-10'
-                } ${flexWidth}`}
+        <div className="w-full flex items-center justify-between text-[9px] font-mono tracking-widest text-slate-600 uppercase pt-2 border-t border-white/5 shrink-0">
+
+        </div>
+      </div>
+
+      {/* ─── FULLSCREEN BLUR OVERLAY (Z-100) ─── */}
+      <div 
+        className={`fixed inset-0 z-[100] bg-[#030712]/95 backdrop-blur-3xl overflow-hidden px-8 md:px-16 lg:px-24 py-8 flex flex-col justify-between transition-opacity duration-500 ease-in-out ${
+          activeProject ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+         }`}
+      >
+        {activeProject && (
+          <div className="w-full h-full flex flex-col justify-between max-w-7xl mx-auto overflow-hidden relative">
+
+            {/* Header Tray */}
+            <div className="flex items-start justify-between pb-6 border-b border-white/5 shrink-0">
+              <div className="text-left">
+                <h3 className="text-3xl md:text-5xl font-black uppercase text-white tracking-tight mt-1.5 leading-none">
+                  {activeProject.title}
+                </h3>
+                <p className="text-xs md:text-sm text-slate-400 font-sans font-light mt-2.5">
+                  {activeProject.company}
+                </p>
+              </div>
+              
+              <button 
+                onClick={() => setActiveProject(null)}
+                className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all shadow-md"
+                aria-label="Close layout"
               >
-                {/* Moving Spotlight Gradient Glow Overlay */}
-                {isHovered && (
-                  <div 
-                    style={{
-                      background: `radial-gradient(400px circle at ${spotlight.x}px ${spotlight.y}px, rgba(99,102,241,0.09), transparent 80%)`,
-                      opacity: spotlight.opacity,
-                      transition: 'opacity 0.2s ease'
-                    }}
-                    className="absolute inset-0 pointer-events-none z-30"
-                  />
-                )}
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
 
-                {/* Laser Top Edge Linear Accent */}
-                <div className={`absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent transition-transform duration-500 ${
-                  isHovered ? 'translate-y-0' : '-translate-y-1'
-                }`} />
+            {/* Split Grid Content Panel */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-6 flex-1 items-stretch overflow-hidden">
+              <div className="lg:col-span-6 flex flex-col justify-center space-y-6 text-left overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pr-2">
+                <div className="space-y-1">
+                  <h4 className="font-mono text-[10px] text-slate-500 uppercase tracking-widest font-bold">// System Synopsis</h4>
+                  <p className="text-slate-200 text-sm md:text-base font-light leading-relaxed normal-case">
+                    {activeProject.description}
+                  </p>
+                </div>
 
-                {/* Main Content Area */}
-                <div className="space-y-4 overflow-hidden flex-1 flex flex-col">
-                  <div className="flex items-center justify-between shrink-0">
-                    <span className={`font-mono text-[10px] tracking-widest ${isHovered ? 'text-indigo-400 font-bold' : 'text-slate-600'}`}>
-                      {project.tag}
-                    </span>
-
-                    {/* Clean Action Router Layout for Source/Article Links */}
-                    <div className={`flex items-center gap-2 transition-opacity duration-300 ${
-                      isHovered ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-                    }`}>
-                      {/* Optional Article Feature Link Button */}
-                      {project.article && (
-                        <a 
-                          href={project.article}
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="text-[10px] font-mono text-slate-400 hover:text-indigo-400 transition-colors px-2.5 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg hover:border-indigo-500/30 shadow-md"
-                          aria-label="Read Featured News Article"
-                        >
-                          READ PRESS
-                        </a>
-                      )}
-
-                      {project.github && (
-                        <a 
-                          href={project.github} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="text-slate-400 hover:text-indigo-400 transition-colors p-1.5 flex items-center justify-center bg-white/[0.02] border border-white/5 rounded-lg hover:border-indigo-500/30 shadow-md group/btn" 
-                          aria-label="View Source Code"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transform group-hover/btn:scale-105 transition-transform">
-                            <polyline points="16 18 22 12 16 6" />
-                            <polyline points="8 6 2 12 8 18" />
-                          </svg>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="shrink-0">
-                    <h3 className={`text-xl md:text-2xl font-black tracking-tight uppercase transition-colors duration-300 ${
-                      isHovered ? 'text-white' : 'text-slate-400'
-                    }`}>
-                      {project.title}
-                    </h3>
-                    <p className="text-[9px] font-mono tracking-wider text-indigo-400/80 uppercase mt-1">
-                      {project.company}
+                <div className="space-y-4">
+                  <div className="space-y-1 bg-red-500/[0.02] border border-red-500/10 p-4 rounded-xl">
+                    <h4 className="font-mono text-[9px] text-red-400/90 uppercase tracking-widest font-bold">// Structural Challenge</h4>
+                    <p className="text-slate-300 text-xs md:text-sm leading-relaxed normal-case">
+                      {activeProject.challenge}
                     </p>
                   </div>
 
-                  {/* Rest State Default Description Panel */}
-                  <p className={`text-xs text-slate-400 font-light leading-relaxed transition-all duration-500 normal-case shrink-0 ${
-                    isHovered ? 'opacity-0 max-h-0 overflow-hidden mt-0 pointer-events-none' : 'opacity-100 max-h-20 mt-2'
-                  }`}>
-                    {project.description}
-                  </p>
-
-                  {/* Hover Active Operational Data Matrix */}
-                  <div className={`transition-all duration-500 ease-in-out flex-1 overflow-hidden ${
-                    isHovered ? 'opacity-100 pt-2' : 'opacity-0 max-h-0 pointer-events-none'
-                  }`}>
-                    <ul className="space-y-3 max-h-[190px] overflow-y-auto pr-1">
-                      {project.bullets.map((bullet, i) => (
-                        <li key={i} className="text-[11px] text-slate-300 leading-relaxed font-light flex items-start gap-3 normal-case animate-fadeIn">
-                          <span className="text-indigo-400 shrink-0 font-mono text-[10px] select-none mt-0.5">&gt;_</span>
-                          <span>{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="space-y-1 bg-emerald-500/[0.02] border border-emerald-500/10 p-4 rounded-xl">
+                    <h4 className="font-mono text-[9px] text-emerald-400/90 uppercase tracking-widest font-bold">// Engineering Solution</h4>
+                    <p className="text-slate-300 text-xs md:text-sm leading-relaxed normal-case">
+                      {activeProject.solution}
+                    </p>
                   </div>
                 </div>
 
-                {/* Bottom Tech Array Dependencies Tray */}
-                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/5 shrink-0">
-                  {project.stack.map((tech) => (
-                    <span 
-                      key={tech} 
-                      className={`text-[8px] font-mono px-2 py-0.5 rounded tracking-wide transition-colors duration-300 uppercase ${
-                        isHovered 
-                          ? 'bg-indigo-950/20 border border-indigo-500/20 text-indigo-300' 
-                          : 'bg-white/5 border border-white/5 text-slate-500'
-                      }`}
-                    >
-                      {tech}
-                    </span>
-                  ))}
+                <div className="space-y-2">
+                  <h4 className="font-mono text-[10px] text-slate-500 uppercase tracking-widest font-bold">// Dependencies Track</h4>
+                  <div className="flex flex-wrap gap-1.5">
+                    {activeProject.stack.map(tech => (
+                      <span key={tech} className="text-[10px] font-mono px-2.5 py-0.5 rounded bg-white/5 border border-white/5 text-indigo-300 uppercase tracking-wide">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            )
-          })}
-        </div>
 
+              {/* Right Column (With Native SVG Code Brackets) */}
+              <div className="lg:col-span-6 flex flex-col justify-center items-center overflow-hidden h-full max-h-full space-y-3.5">
+                
+                {/* Micro-Icon Action Row */}
+                <div className="w-full flex items-center justify-start gap-3 shrink-0 px-1">
+                  {activeProject.article && (
+                    <a 
+                      href={activeProject.article} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-indigo-400 hover:text-indigo-300 transition-all shadow-md group/icon"
+                      title="Navigator Log"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/icon:-translate-y-0.5 group-hover/icon:translate-x-0.5">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </a>
+                  )}
+                  {activeProject.github && (
+                    <a 
+                      href={activeProject.github} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-slate-300 hover:text-white transition-all shadow-md group/icon"
+                      title="Source Code Repository"
+                    >
+                      {/* Native SVG replacement for GitHub: Code Bracket icon </> */}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/icon:scale-105">
+                        <polyline points="16 18 22 12 16 6" />
+                        <polyline points="8 6 2 12 8 18" />
+                      </svg>
+                    </a>
+                  )}
+                </div>
+
+                <div 
+                  onClick={() => setIsLightbox(true)}
+                  className="w-full rounded-xl overflow-hidden bg-neutral-950/40 border border-white/5 p-1.5 shadow-xl shrink-0 cursor-zoom-in group relative"
+                >
+                  <img 
+                    src={activeProject.images[currentImgIndex]} 
+                    alt={`${activeProject.title} Rendering`} 
+                    className="w-full h-auto max-h-[300px] object-contain rounded-lg mx-auto transition-transform duration-500 group-hover:scale-[1.01]" 
+                  />
+                </div>
+
+                {activeProject.images.length > 1 && (
+                  <div className="flex items-center gap-2">
+                    {activeProject.images.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImgIndex(index)}
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          currentImgIndex === index ? 'w-6 bg-indigo-500' : 'w-1.5 bg-slate-700 hover:bg-slate-500'
+                        }`}
+                        aria-label={`Go to snapshot ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Decorative Matrix Baseline */}
+            <div className="w-full text-left font-mono text-[9px] text-slate-600 border-t border-white/5 pt-4 tracking-widest shrink-0">
+              <span>// PIPELINE ENCRYPT READOUT: OK</span>
+            </div>
+
+          </div>
+        )}
       </div>
+
+      {/* ─── SCREEN-WIDE LIGHTBOX (Z-200, NO CLOSE BUTTON) ─── */}
+      {activeProject && isLightbox && (
+        <div 
+          onClick={() => setIsLightbox(false)}
+          className="fixed inset-0 w-screen h-screen bg-[#030712] z-[200] flex items-center justify-center cursor-zoom-out animate-fade-in"
+        >
+          <img 
+            src={activeProject.images[currentImgIndex]} 
+            alt="Expanded Fullscreen Snapshot" 
+            className="max-w-[95vw] max-h-[92vh] object-contain rounded-xl shadow-2xl" 
+          />
+        </div>
+      )}
     </section>
-  )
+  );
 }

@@ -66,7 +66,7 @@ export default function About() {
           {isAboutVisible ? (
             <Lanyard 
               position={[0, 0, 15]} 
-              gravity={[0, -65, 0]} 
+              gravity={[0, -40, 0]} 
               frontImage={forLanyard} 
               backImage={backImage} 
               imageFit="contain" 
