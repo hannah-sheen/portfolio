@@ -98,13 +98,13 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer'; 
-import { getChatResponse } from './src/utils/chatHelper.js'; // Import from chatHelper
+import { getChatResponse } from './src/utils/chatHelper.js';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Reusable Transporter from your nodemailer-setup.md
+// Reusable Transporter
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
   port: Number(process.env.MAIL_PORT),
@@ -115,13 +115,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Verify mail server connection on startup
 transporter.verify((err) => {
   if (err) console.error('Mail server connection failed:', err);
   else console.log('Mail server ready to send emails');
 });
 
-// The API endpoint your Vite contact form will send data to
+// Contact endpoint
 app.post('/api/contact', async (req, res) => {
   try {
     const { email, subject, message } = req.body;
@@ -187,24 +186,18 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// =============================================
-// CHATBOT API ENDPOINT (Using chatHelper)
-// =============================================
-
+// Chat endpoint
 app.post('/api/chat', async (req, res) => {
   try {
     const { message } = req.body;
 
-    // Validate input
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ 
         error: 'Message is required and must be a string' 
       });
     }
 
-    // Use the chat helper from utils
     const reply = await getChatResponse(message);
-    
     return res.status(200).json({ reply });
 
   } catch (error) {
@@ -215,8 +208,10 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// Start the server on port 5000
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Backend server running on http://localhost:${PORT}`));
 
-export default app; 
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Backend server running on http://localhost:${PORT}`));
+}
+
+export default app;
