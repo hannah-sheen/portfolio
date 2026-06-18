@@ -26,7 +26,7 @@ export default function Chatbot({ isOpen, onClose }: ChatbotProps) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
- 
+
   // High-performance micro formatter to parse Markdown lists and bold text safely
   const renderMessageText = (text: string) => {
     return text.split('\n').map((line, lineIdx) => {
@@ -74,16 +74,14 @@ export default function Chatbot({ isOpen, onClose }: ChatbotProps) {
     setIsLoading(true);
 
     try {
-      // 💡 Dynamic fallback: Use your live deployed backend URL or localhost if developing
-      const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      
-      const response = await fetch(`${BACKEND_URL}/api/chat`, {
+      // 💡 Clean relative routing inside your Vercel project ecosystem
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: query }),
+        body: JSON.stringify({ message: query }), 
       });
 
-      if (!response.ok) throw new Error("Server responded with an error status");
+      if (!response.ok) throw new Error("Server connection failure");
       
       const data = await response.json();
       setMessages(prev => [...prev, { id: botMsgId, sender: 'bot', text: data.reply }]);
@@ -94,10 +92,9 @@ export default function Chatbot({ isOpen, onClose }: ChatbotProps) {
       setIsLoading(false);
     }
   };
-   
+    
   return (
     <div
-      // PERFECT MID-SIZE: Adjusted to w-72 / sm:w-80 and h-[480px]
       className="fixed bottom-6 right-6 z-[100] w-72 sm:w-80 h-[480px] rounded-2xl overflow-hidden border border-white/10 bg-[#0f172a]/95 backdrop-blur-md shadow-2xl flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-300"
       onMouseEnter={() => document.body.setAttribute('data-dragging', 'true')}
       onMouseLeave={() => document.body.removeAttribute('data-dragging')}

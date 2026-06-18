@@ -6,16 +6,8 @@ import { GoogleGenAI } from '@google/genai';
 
 const app = express();
 
-// 💡 PRODUCTION CORS CONFIGURATION:
-// This authenticates your live frontend URL and allows local development sync
-app.use(cors({
-  origin: [
-    'http://localhost:5173', 
-    'https://portfolio-lyart-nu-79.vercel.app'
-  ],
-  credentials: true
-}));
-
+// Since everything lives on the same Vercel domain, allow open communication
+app.use(cors());
 app.use(express.json());
 
 // Initialize AI securely using your hidden system environment variable
@@ -182,11 +174,11 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// 💡 Local environment development runner option
+// Local runtime fallback tracker option
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => console.log(`Backend tracking local runtime on port ${PORT}`));
 }
 
-// Export the module application layout directly for Vercel
+// Export module application engine directly for Vercel Serverless compilation
 export default app;
