@@ -218,3 +218,5 @@ app.post('/api/chat', async (req, res) => {
 // Start the server on port 5000
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Backend server running on http://localhost:${PORT}`));
+
+export default app; 

@@ -507,10 +507,12 @@ export default function Chatbot({ isOpen, onClose }: ChatbotProps) {
     setIsLoading(true);
 
     try {
-      // Determine API URL based on environment
-      const apiUrl = import.meta.env.DEV 
-        ? 'http://localhost:5000/api/chat'  // Local development
-        : '/api/chat';                       // Production (Vercel)
+      // FIXED: Determine API URL based on environment
+      const apiUrl = import.meta.env.PROD 
+        ? '/api/chat'  // Production (Vercel)
+        : 'http://localhost:5000/api/chat';  // Local development
+
+      console.log('Sending to:', apiUrl); // Debug log
 
       const response = await fetch(apiUrl, {
         method: 'POST',
