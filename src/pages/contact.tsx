@@ -159,7 +159,7 @@ export default function Contact() {
               className="text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none"
               style={{ fontWeight: 950 }}
             />
-          </div>
+          </div> 
           <div className="overflow-hidden py-1 flex items-center gap-4">
             <Shuffle
               text="Something Real."
