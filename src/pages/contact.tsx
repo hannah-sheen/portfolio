@@ -28,13 +28,11 @@ export default function Contact() {
         setSubject('')
         setMessage('')
         
-        // Automatically hide the status notification message after 3 seconds
         setTimeout(() => {
           setStatus('idle')
         }, 3000)
       } else {
         setStatus('error')
-        // Clear error alert after 3 seconds as well
         setTimeout(() => {
           setStatus('idle')
         }, 3000)
@@ -42,7 +40,6 @@ export default function Contact() {
     } catch (error) {
       console.error('Frontend message dispatch error:', error)
       setStatus('error')
-      // Clear network connection error alert after 3 seconds
       setTimeout(() => {
         setStatus('idle')
       }, 3000)
@@ -52,22 +49,22 @@ export default function Contact() {
   return (
     <section 
       id="contact" 
-      className="w-full h-screen bg-[#030712] relative overflow-hidden flex" 
+      className="w-full min-h-screen md:h-screen bg-[#030712] relative overflow-x-hidden overflow-y-auto md:overflow-hidden flex flex-col-reverse md:flex-row" 
       style={{ fontFamily: "'Manrope', sans-serif" }}
     >      
       {/* Background Soft Ambient Light Layers */}
       <div className="absolute right-0 bottom-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute left-1/4 top-1/4 w-72 h-72 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* LEFT SIDE: Full-Scale Interactive Form Block (w-1/2 split) */}
-      <div className="w-1/2 h-full flex flex-col justify-between p-16 md:p-20 relative z-20 bg-[#030712] border-r border-white/5">
+      {/* FORM SIDE: Appears second on mobile, left side on desktop */}
+      <div className="w-full md:w-1/2 min-h-0 md:h-full flex flex-col justify-between p-6 sm:p-16 md:p-20 relative z-20 bg-[#030712] border-t md:border-t-0 md:border-r border-white/5 pb-16 md:pb-20">
         
         {/* Top Spacer */}
-        <div className="h-6" />
+        <div className="h-6 hidden md:block" />
 
         {/* Clean, spacious card enclosure centered in the frame */}
-        <div className="w-full max-w-xl my-auto bg-slate-950/40 backdrop-blur-md border border-white/5 rounded-3xl p-8 md:p-10 shadow-[0_32px_100px_-20px_rgba(0,0,0,0.5)]">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="w-full max-w-xl mt-2 mb-auto md:my-auto bg-slate-950/40 backdrop-blur-md border border-white/5 rounded-3xl p-6 sm:p-8 md:p-10 shadow-[0_32px_100px_-20px_rgba(0,0,0,0.5)]">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
             
             {/* Email Input */}
             <div className="flex flex-col space-y-2">
@@ -79,7 +76,7 @@ export default function Contact() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-slate-600 outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300"
               />
             </div>
 
@@ -92,8 +89,8 @@ export default function Contact() {
                 required
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                placeholder="Project Inquiry / Collaboration opportunity"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-slate-600 outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300"
+                placeholder="Project Inquiry / Collaboration"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300"
               />
             </div>
 
@@ -107,7 +104,7 @@ export default function Contact() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Tell me about what system you're looking to build..."
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-slate-600 outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300 resize-none"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300 resize-none"
               />
             </div>
 
@@ -118,17 +115,17 @@ export default function Contact() {
                 disabled={status === 'sending'}
                 className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-800/50 disabled:text-slate-400 transition-all duration-300 shadow-lg shadow-indigo-600/20 active:scale-[0.98] cursor-pointer"
               >
-                {status === 'sending' ? 'Dispatching Message...' : 'Send Message'}
+                {status === 'sending' ? 'Dispatching...' : 'Send Message'}
               </button>
 
               {status === 'success' && (
                 <p className="text-xs font-medium text-emerald-400 flex items-center gap-1.5 animate-fade-in">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Message sent successfully!
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Success!
                 </p>
               )}
               {status === 'error' && (
                 <p className="text-xs font-medium text-rose-400 flex items-center gap-1.5 animate-fade-in">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-400" /> System failure. Try again.
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-400" /> System failure.
                 </p>
               )}
             </div>
@@ -137,18 +134,18 @@ export default function Contact() {
         </div>
 
         {/* Left Side Bottom Balancing Spacer */}
-        <div className="pt-6 w-full opacity-0 pointer-events-none">
+        <div className="pt-6 w-full opacity-0 pointer-events-none hidden md:block">
           <span className="text-xs text-slate-600">Spacer Alignment</span>
         </div>
       </div>
 
-      {/* RIGHT SIDE: Editorial Text Block (w-1/2 split) */}
-      <div className="w-1/2 h-full relative overflow-hidden flex flex-col justify-between p-16 md:p-20 select-none">
+      {/* EDITORIAL TEXT SIDE: Appears first on mobile, right side on desktop */}
+      <div className="w-full md:w-1/2 h-auto md:h-full relative overflow-hidden flex flex-col justify-between p-6 sm:p-16 md:p-20 select-none pt-12 pb-4 md:py-20">
         
         {/* Top Spacer */}
-        <div className="h-6" />
+        <div className="h-6 hidden md:block" />
 
-        {/* Scaled Headers - Now utilizing the spacious right viewport column */}
+        {/* Scaled Headers */}
         <div className="relative space-y-1 w-full z-20 my-auto">
           <div className="overflow-hidden py-1">
             <Shuffle
@@ -159,7 +156,7 @@ export default function Contact() {
               animationMode="evenodd"
               duration={0.6}
               stagger={0.03}
-              className="text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none"
+              className="text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none"
               style={{ fontWeight: 950 }}
             />
           </div>
@@ -172,19 +169,19 @@ export default function Contact() {
               animationMode="evenodd"
               duration={0.6}
               stagger={0.035}
-              className="block text-5xl md:text-6xl font-extralight text-indigo-300 italic tracking-wide leading-none"
+              className="block text-3xl sm:text-5xl md:text-6xl font-extralight text-indigo-300 italic tracking-wide leading-none"
               style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
             />
             <div className="h-[1px] flex-1 bg-gradient-to-r from-slate-700/60 to-transparent ml-2 opacity-50 hidden sm:block" />
           </div>
 
-          <p className="text-lg md:text-xl font-light text-slate-400 max-w-md pt-6 normal-case leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl font-light text-slate-400 max-w-md pt-4 md:pt-6 normal-case leading-relaxed">
             Whether you need to architect a robust backend infrastructure, map out a complex database scheme, or roll out an enterprise full-stack system, let's talk.
           </p>
         </div>
 
         {/* Right Side Footer Indicator */}
-        <div className="mt-12 md:mt-0 space-y-2 border-l-2 border-indigo-500/30 pl-4 py-1">
+        <div className="mt-8 md:mt-0 space-y-1 border-l-2 border-indigo-500/30 pl-4 py-0.5 shrink-0">
           <div className="text-[10px] tracking-wider text-slate-500 uppercase font-bold">Current Base</div>
           <div className="text-xs font-semibold text-slate-300">Philippines</div>
         </div>

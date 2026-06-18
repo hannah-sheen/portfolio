@@ -160,7 +160,6 @@ export default function Projects() {
     }
 
     if (isDragging) {
-      e.preventDefault();
       const walkX = (e.clientX - mouseStartPos.current.x) * 1.5; 
       scrollContainerRef.current.scrollLeft = scrollLeft - walkX;
     }
@@ -168,7 +167,6 @@ export default function Projects() {
 
   const handleWheel = (e: WheelEvent<HTMLDivElement>) => {
     if (scrollContainerRef.current) {
-      e.preventDefault();
       scrollContainerRef.current.scrollLeft += e.deltaY;
     }
   };
@@ -176,7 +174,7 @@ export default function Projects() {
   return (
     <section 
       id="projects" 
-      className="w-full h-screen bg-[#030712] text-white px-12 md:px-24 flex flex-col justify-between relative overflow-hidden"
+      className="w-full h-screen bg-[#030712] text-white px-6 md:px-24 flex flex-col justify-between relative overflow-hidden"
       style={{ fontFamily: "'Manrope', sans-serif" }}
     >
       <div className="absolute inset-0 pointer-events-none z-0">
@@ -184,18 +182,28 @@ export default function Projects() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.02)_0%,transparent_60%)]" />
       </div>
 
-      <div className="w-full h-full py-12 md:py-16 flex flex-col justify-between z-10 overflow-hidden">
+      <div className="w-full h-full py-8 md:py-16 flex flex-col justify-between z-10 overflow-hidden">
         
         {/* HEADER BLOCK */}
         <div className="w-full flex flex-col items-end text-right space-y-1 shrink-0">
           <div className="py-0.5 pointer-events-auto cursor-default">
-            <Shuffle text="PROJECTS" tag="h2" textAlign="right" shuffleDirection="left" className="text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none pr-4 select-none" style={{ fontWeight: 950 }} />
+            <Shuffle text="PROJECTS" tag="h2" 
+              textAlign="right" 
+              shuffleDirection="left" 
+              className="text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none"
+              style={{ fontWeight: 950 }} 
+            />
           </div>
           <div className="py-0.5 flex items-center justify-end gap-4 pointer-events-auto cursor-default w-full">
-            <div className="h-[1px] flex-1 bg-gradient-to-l from-slate-700/60 to-transparent mr-2 opacity-50 hidden sm:block" />
-            <Shuffle text="& Compiled Architecture" tag="span" textAlign="right" shuffleDirection="left" className="block text-4xl md:text-5xl font-extralight text-indigo-300 italic tracking-wide leading-none select-none" style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }} />
+            <div className="h-[1px] flex-1 bg-gradient-to-l from-slate-700/60 to-transparent mr-2 opacity-50 block" />
+            <Shuffle text="& Compiled Architecture" 
+              tag="span" textAlign="right" 
+              shuffleDirection="left" 
+              className="block text-3xl sm:text-5xl md:text-6xl font-extralight text-indigo-300 italic tracking-wide leading-none"
+              style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }} 
+            />
           </div>
-          <p className="text-sm leading-relaxed text-slate-400 font-medium max-w-xl pt-3 normal-case pointer-events-none">
+          <p className="text-xs sm:text-sm leading-relaxed text-slate-400 font-medium max-w-xl pt-3 normal-case pointer-events-none">
             My architectural compilation engineering web platforms, intelligent identity profiling pipelines, and adaptive automated tools.
           </p>
         </div>
@@ -208,12 +216,12 @@ export default function Projects() {
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
           onWheel={handleWheel}
-          className={`w-full flex-1 flex items-center gap-6 mt-4 mb-4 overflow-x-auto overflow-y-hidden pt-10 pb-4 px-2 select-none justify-start [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+          className={`w-full flex-1 flex items-center gap-4 md:gap-6 mt-4 mb-4 overflow-x-auto overflow-y-hidden pt-6 md:pt-10 pb-4 px-2 select-none justify-start [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
             isDragging ? 'cursor-grabbing snap-none' : 'cursor-grab snap-x snap-mandatory scroll-smooth'
           }`}
         >
           {projectsData.map((project) => (
-            <div key={project.id} className="pointer-events-auto py-4 snap-center shrink-0">
+            <div key={project.id} className="pointer-events-auto py-2 md:py-4 snap-center shrink-0">
               <InfoCard
                 tag={project.tag}
                 title={project.title}
@@ -227,33 +235,34 @@ export default function Projects() {
         </div>
 
         <div className="w-full flex items-center justify-between text-[9px] font-mono tracking-widest text-slate-600 uppercase pt-2 border-t border-white/5 shrink-0">
-
+          <span className="md:hidden">Swipe to explore</span>
+          <span className="hidden md:inline">Drag or scroll to explore</span>
         </div>
       </div>
 
       {/* ─── FULLSCREEN BLUR OVERLAY (Z-100) ─── */}
       <div 
-        className={`fixed inset-0 z-[100] bg-[#030712]/95 backdrop-blur-3xl overflow-hidden px-8 md:px-16 lg:px-24 py-8 flex flex-col justify-between transition-opacity duration-500 ease-in-out ${
+        className={`fixed inset-0 z-[100] bg-[#030712]/95 backdrop-blur-3xl overflow-y-auto px-6 md:px-16 lg:px-24 py-8 flex flex-col transition-opacity duration-500 ease-in-out ${
           activeProject ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
          }`}
       >
         {activeProject && (
-          <div className="w-full h-full flex flex-col justify-between max-w-7xl mx-auto overflow-hidden relative">
+          <div className="w-full flex flex-col max-w-7xl mx-auto relative">
 
             {/* Header Tray */}
             <div className="flex items-start justify-between pb-6 border-b border-white/5 shrink-0">
               <div className="text-left">
-                <h3 className="text-3xl md:text-5xl font-black uppercase text-white tracking-tight mt-1.5 leading-none">
+                <h3 className="text-2xl sm:text-3xl md:text-5xl font-black uppercase text-white tracking-tight mt-1.5 leading-none">
                   {activeProject.title}
                 </h3>
-                <p className="text-xs md:text-sm text-slate-400 font-sans font-light mt-2.5">
+                <p className="text-[10px] md:text-sm text-slate-400 font-sans font-light mt-2 md:mt-2.5">
                   {activeProject.company}
                 </p>
               </div>
               
               <button 
                 onClick={() => setActiveProject(null)}
-                className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all shadow-md"
+                className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all shadow-md"
                 aria-label="Close layout"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -263,16 +272,16 @@ export default function Projects() {
             </div>
 
             {/* Split Grid Content Panel */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-6 flex-1 items-stretch overflow-hidden">
-              <div className="lg:col-span-6 flex flex-col justify-center space-y-6 text-left overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pr-2">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-8 flex-1 items-start">
+              <div className="lg:col-span-6 flex flex-col space-y-6 text-left">
                 <div className="space-y-1">
-                  <h4 className="font-mono text-[10px] text-slate-500 uppercase tracking-widest font-bold">// System Synopsis</h4>
+                  <h4 className="font-mono text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-widest font-bold">// System Synopsis</h4>
                   <p className="text-slate-200 text-sm md:text-base font-light leading-relaxed normal-case">
                     {activeProject.description}
                   </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
                   <div className="space-y-1 bg-red-500/[0.02] border border-red-500/10 p-4 rounded-xl">
                     <h4 className="font-mono text-[9px] text-red-400/90 uppercase tracking-widest font-bold">// Structural Challenge</h4>
                     <p className="text-slate-300 text-xs md:text-sm leading-relaxed normal-case">
@@ -292,7 +301,7 @@ export default function Projects() {
                   <h4 className="font-mono text-[10px] text-slate-500 uppercase tracking-widest font-bold">// Dependencies Track</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {activeProject.stack.map(tech => (
-                      <span key={tech} className="text-[10px] font-mono px-2.5 py-0.5 rounded bg-white/5 border border-white/5 text-indigo-300 uppercase tracking-wide">
+                      <span key={tech} className="text-[9px] sm:text-[10px] font-mono px-2.5 py-0.5 rounded bg-white/5 border border-white/5 text-indigo-300 uppercase tracking-wide">
                         {tech}
                       </span>
                     ))}
@@ -300,8 +309,8 @@ export default function Projects() {
                 </div>
               </div>
 
-              {/* Right Column (With Native SVG Code Brackets) */}
-              <div className="lg:col-span-6 flex flex-col justify-center items-center overflow-hidden h-full max-h-full space-y-3.5">
+              {/* Right Column (Image and Actions) */}
+              <div className="lg:col-span-6 flex flex-col items-center space-y-6">
                 
                 {/* Micro-Icon Action Row */}
                 <div className="w-full flex items-center justify-start gap-3 shrink-0 px-1">
@@ -310,7 +319,7 @@ export default function Projects() {
                       href={activeProject.article} 
                       target="_blank" 
                       rel="noreferrer" 
-                      className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-indigo-400 hover:text-indigo-300 transition-all shadow-md group/icon"
+                      className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-indigo-400 hover:text-indigo-300 transition-all shadow-md group/icon"
                       title="Navigator Log"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/icon:-translate-y-0.5 group-hover/icon:translate-x-0.5">
@@ -325,10 +334,9 @@ export default function Projects() {
                       href={activeProject.github} 
                       target="_blank" 
                       rel="noreferrer" 
-                      className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-slate-300 hover:text-white transition-all shadow-md group/icon"
+                      className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-slate-300 hover:text-white transition-all shadow-md group/icon"
                       title="Source Code Repository"
                     >
-                      {/* Native SVG replacement for GitHub: Code Bracket icon </> */}
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/icon:scale-105">
                         <polyline points="16 18 22 12 16 6" />
                         <polyline points="8 6 2 12 8 18" />
@@ -344,7 +352,7 @@ export default function Projects() {
                   <img 
                     src={activeProject.images[currentImgIndex]} 
                     alt={`${activeProject.title} Rendering`} 
-                    className="w-full h-auto max-h-[300px] object-contain rounded-lg mx-auto transition-transform duration-500 group-hover:scale-[1.01]" 
+                    className="w-full h-auto max-h-[250px] sm:max-h-[350px] object-contain rounded-lg mx-auto transition-transform duration-500 group-hover:scale-[1.01]" 
                   />
                 </div>
 
@@ -366,7 +374,7 @@ export default function Projects() {
             </div>
 
             {/* Decorative Matrix Baseline */}
-            <div className="w-full text-left font-mono text-[9px] text-slate-600 border-t border-white/5 pt-4 tracking-widest shrink-0">
+            <div className="w-full text-left font-mono text-[9px] text-slate-600 border-t border-white/5 pt-6 pb-4 tracking-widest shrink-0">
               <span>// PIPELINE ENCRYPT READOUT: OK</span>
             </div>
 

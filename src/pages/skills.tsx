@@ -47,13 +47,13 @@ const certificationImages: CertificationItem[] = [
 
 export default function Skills() {
   const [isMobile, setIsMobile] = useState<boolean>(false)
-  const [_lightboxImage, setLightboxImage] = useState<string | null>(null)
+  const [lightboxImage, setLightboxImage] = useState<CertificationItem | null>(null)
   
   const [isDragging, setIsDragging] = useState<boolean>(false)
   const mouseStartPos = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024)
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => {
@@ -74,32 +74,35 @@ export default function Skills() {
     const deltaY = Math.abs(e.clientY - mouseStartPos.current.y)
     if (deltaX > 8 || deltaY > 8) {
       setIsDragging(true)
-      document.body.setAttribute('data-dragging', 'true') // <-- INFORMS APP.TSX TO HALT PAGE SLIDE
+      document.body.setAttribute('data-dragging', 'true')
     }
   }
 
   const handleMouseUp = () => {
     setTimeout(() => {
       setIsDragging(false)
-      document.body.setAttribute('data-dragging', 'false') // <-- RESTORES SCROLLING ACTION
+      document.body.setAttribute('data-dragging', 'false')
     }, 50)
   }
 
   return (
     <section 
       id="skills" 
-      className="w-full h-screen bg-[#030712] relative overflow-hidden flex flex-col justify-start p-6 md:p-12 lg:p-16 gap-6"
+      // 💡 FIX: Elevates the section's z-index to z-[9999] when open so elements from other sections can't leak over the screen overlay
+      className={`w-full min-h-screen md:h-screen bg-[#030712] relative overflow-hidden flex flex-col justify-start p-6 sm:p-12 md:p-16 gap-6 md:gap-8 transition-all duration-100 ${
+        lightboxImage ? 'z-[9999]' : 'z-10'
+      }`}
       style={{ fontFamily: "'Manrope', sans-serif" }}
     >
       <div className="absolute inset-0 w-full h-full bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
 
-      <div className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16 items-start z-10">
-        <div className="w-full lg:w-1/4 flex flex-col shrink-0">
+      <div className="w-full flex flex-col md:flex-row gap-8 md:gap-16 items-start z-10 pointer-events-auto">
+        <div className="w-full md:w-1/4 flex flex-col shrink-0">
           <div className="py-1 pointer-events-auto cursor-default">
             <Shuffle
               text="SKILLS"
               tag="h2"
-              className="text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none pr-4 select-none"
+              className="text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none"
               style={{ fontWeight: 950 }}
             />
           </div>
@@ -107,16 +110,16 @@ export default function Skills() {
             <Shuffle
               text="& Credentials"
               tag="span"
-              className="block text-4xl md:text-5xl font-extralight text-indigo-300 italic tracking-wide leading-none select-none"
+              className="block text-3xl sm:text-5xl md:text-6xl font-extralight text-indigo-300 italic tracking-wide leading-none"
               style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
             />
           </div>
-          <p className="text-sm leading-relaxed text-slate-400 font-medium max-w-xs pt-4 normal-case pointer-events-none">
+          <p className="text-xs sm:text-sm leading-relaxed text-slate-400 font-medium max-w-xs pt-4 normal-case pointer-events-auto">
             A comprehensive overview of my tech stack distribution paired with authenticated performance benchmarks.
           </p>
         </div>
 
-        <div className="w-full lg:flex-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 pt-2">
+        <div className="w-full md:flex-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 pt-2 pointer-events-auto">
           {skillCategories.map((cat) => (
             <div key={cat.title} className="space-y-2.5 border-l border-white/5 pl-4 hover:border-indigo-500/30 transition-all duration-300">
               <span className="text-[10px] font-mono font-bold text-indigo-400 tracking-widest uppercase block mb-1">
@@ -137,22 +140,25 @@ export default function Skills() {
         </div>
       </div>
 
-     <div className="w-full z-10 flex flex-col gap-4">
+      <div className="w-full z-20 flex flex-col gap-4 mt-auto pointer-events-auto">
         <div className="w-full border-b border-white/5" />
+        
         {isMobile ? (
-          <div className="flex gap-4 overflow-x-auto py-2 scrollbar-hide snap-x snap-mandatory">
+          <div className="flex gap-4 overflow-x-auto py-2 snap-x snap-mandatory scrollbar-none style-scrollbar-hidden pointer-events-auto relative z-30">
             {certificationImages.map((cert, index) => (
               <div
                 key={index}
-                onClick={() => setLightboxImage(cert.image)}
-                className="min-w-[280px] w-[280px] h-44 snap-center bg-[#050914]/85 border border-white/10 rounded-xl overflow-hidden relative cursor-pointer"
+                onClick={() => setLightboxImage(cert)}
+                className="min-w-[280px] w-[280px] h-44 snap-center bg-[#050914]/85 border border-white/10 rounded-xl overflow-hidden relative cursor-pointer active:scale-[0.98] transition-transform duration-200"
               >
                 <img 
                   src={cert.image} 
                   alt={cert.title} 
                   className="w-full h-full object-cover opacity-70" 
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent flex items-end p-4">
+                  <span className="text-[10px] font-medium text-slate-300 uppercase tracking-wider">{cert.title}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -199,6 +205,48 @@ export default function Skills() {
           </div>
         )}
       </div>
+
+      {/* FULL COVERAGE LIGHTBOX VIEWPORT */}
+      {lightboxImage && (
+        <div 
+          className="fixed inset-0 bg-black/95 backdrop-blur-md z-[9999] md:hidden flex flex-col items-center justify-center p-6 animate-fadeIn"
+          onClick={() => setLightboxImage(null)}
+        >
+          <div className="relative flex items-center justify-center">
+            {/* Ambient Background Radial Glow Shield */}
+            <div className="absolute w-[130%] aspect-square rounded-full bg-indigo-500/20 blur-[50px] z-0 pointer-events-none animate-pulse" />
+            
+            {/* Protected Scaling Image Container */}
+            <div className="max-w-[85vw] max-h-[65vh] rounded-xl overflow-hidden border border-white/10 bg-[#050914]/60 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] relative z-10 flex items-center justify-center">
+              <img 
+                src={lightboxImage.image} 
+                alt={lightboxImage.title}
+                className="w-full h-auto max-h-[65vh] object-contain block"
+                onClick={(e) => e.stopPropagation()} 
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        .style-scrollbar-hidden::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+        .style-scrollbar-hidden {
+          -ms-overflow-style: none !important;
+          scrollbar-width: none !important;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
     </section>
   )
 }

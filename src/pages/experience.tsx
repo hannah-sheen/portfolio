@@ -36,7 +36,7 @@ const experienceNodes: ExperienceNode[] = [
     x: 650,
     y: 530,
     tag: "0x02",
-    article: "https://www.ctu.edu.ph/ctu-main-ccict-equips-barangay-san-roque-personnel-with-essential-digital-skills/" // Connects your real-world verification link
+    article: "https://www.ctu.edu.ph/ctu-main-ccict-equips-barangay-san-roque-personnel-with-essential-digital-skills/"
   },
   {
     id: "node-3",
@@ -95,12 +95,14 @@ export default function Experience() {
   }, [])
 
   useEffect(() => {
-    const firstNode = experienceNodes[0]
-    setActiveNode(firstNode)
-    setTimeout(() => {
-      focusOnCoordinates(firstNode.x, firstNode.y, 1.1)
-    }, 150)
-    return () => { document.body.setAttribute('data-dragging', 'false') }
+    if (window.innerWidth >= 768) {
+      const firstNode = experienceNodes[0]
+      setActiveNode(firstNode)
+      setTimeout(() => {
+        focusOnCoordinates(firstNode.x, firstNode.y, 1.1)
+      }, 150)
+    }
+    return () => { document.body.removeAttribute('data-dragging') }
   }, [])
 
   const startGlobalDragState = () => {
@@ -110,16 +112,13 @@ export default function Experience() {
 
   const stopGlobalDragState = () => {
     setIsDragging(false)
-    document.body.setAttribute('data-dragging', 'false')
+    document.body.removeAttribute('data-dragging')
   }
 
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).closest('.data-card')) return
-    
     const isButton = (e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')
-    if (!isButton) {
-      e.preventDefault()
-    }
+    if (!isButton) e.preventDefault()
     
     startGlobalDragState()
     setHasDragged(false)
@@ -137,7 +136,6 @@ export default function Experience() {
 
   const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).closest('.data-card')) return
-    
     const touch = e.touches[0]
     startGlobalDragState()
     setHasDragged(false)
@@ -176,48 +174,100 @@ export default function Experience() {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={stopGlobalDragState}
-      className={`w-full h-screen bg-[#030712] relative overflow-hidden select-none touch-none ${
-        isDragging ? 'cursor-grabbing' : 'cursor-grab'
+      className={`w-full h-screen bg-[#030712] relative flex flex-col justify-start overflow-hidden select-none ${
+        isDragging ? 'md:cursor-grabbing' : 'md:cursor-grab'
       }`}
       style={{ fontFamily: "'Manrope', sans-serif" }}
     >
       
       {/* HUD HEADER COMPONENT LAYER */}
-      <div className="absolute top-16 left-16 md:left-20 z-40 max-w-sm space-y-1">
-        <div className="py-1 pointer-events-auto cursor-default">
+      <div className="pt-8 px-5 sm:px-12 md:pt-16 md:px-0 md:absolute md:top-16 md:left-20 z-40 max-w-xl space-y-0.5 shrink-0">
+        <div className="py-0.5 cursor-default">
           <Shuffle
             text="EXPERIENCE"
             tag="h2"
-            className="text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none pr-4 select-none"
+            className="text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none"
             style={{ fontWeight: 950 }}
           />
         </div>
-        <div className="py-1 flex items-center gap-4 pointer-events-auto cursor-default">
+        <div className="py-0.5 flex items-center gap-4 cursor-default">
           <Shuffle
             text="& Systems Track"
             tag="span"
-            className="block text-4xl md:text-5xl font-extralight text-indigo-300 italic tracking-wide leading-none select-none"
+            className="block text-3xl sm:text-5xl md:text-6xl font-extralight text-indigo-300 italic tracking-wide leading-none"
             style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
           />
         </div>
-        <p className="text-sm leading-relaxed text-slate-400 font-medium max-w-xs pt-4 normal-case pointer-events-none">
-          My professional timeline navigating management paths, systems instruction, and adaptive software tracks.
-        </p>
       </div>
 
-      {/* DYNAMIC MAP ENGINE CANVAS */}
+      {/* MOBILE COMPACT CARDS GRID: Dynamic Scaling Container (No Overflows/Scrollbars) */}
+      <div className="flex md:hidden flex-col justify-between flex-1 max-h-[calc(100vh-130px)] gap-2 px-5 pt-2 pb-6 w-full z-30">
+        {experienceNodes.map((node) => (
+          <div 
+            key={`mobile-${node.id}`}
+            className="w-full flex-1 min-h-0 bg-[#050914]/80 backdrop-blur-md border border-white/5 rounded-xl p-3 flex flex-col justify-center relative overflow-hidden shadow-md"
+          >
+            <div className="absolute right-0 top-0 w-16 h-16 bg-indigo-500/5 rounded-full blur-lg pointer-events-none" />
+            
+            <div className="space-y-1">
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-[11px] font-bold text-white tracking-tight leading-tight truncate">
+                    {node.role}
+                  </h3>
+                  <span className="text-indigo-400 font-mono text-[9px] font-bold tracking-wider shrink-0 bg-indigo-500/10 px-1.5 py-0.5 rounded">
+                    {node.period}
+                  </span>
+                </div>
+                
+                <div className="text-[9px] font-mono text-slate-400 font-semibold opacity-90 truncate mt-0.5">
+                  {node.company}
+                </div>
+              </div>
+
+              <p className="text-[10px] text-slate-400 leading-normal font-light normal-case line-clamp-3">
+                {node.description}
+              </p>
+
+              <div className="flex items-center justify-between gap-2 pt-1">
+                {/* Displays every tech stack item layout inline smoothly without truncation */}
+                <div className="flex flex-wrap gap-1">
+                  {node.stack.map((tech) => (
+                    <span 
+                      key={`mobile-tech-${tech}`} 
+                      className="text-[8px] font-mono bg-white/5 border border-white/5 text-slate-300 px-1.5 py-0.2 rounded tracking-wide shrink-0"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                {node.article && (
+                  <a 
+                    href={node.article}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[9px] font-mono font-bold tracking-wider text-indigo-400 hover:text-indigo-300 transition-colors shrink-0 whitespace-nowrap pl-2"
+                  >
+                    PRESS ➔
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* DESKTOP ONLY: DYNAMIC MAP ENGINE CANVAS */}
       <div 
-        className="absolute inset-0 transform will-change-transform transition-transform duration-700 cubic-bezier(0.25, 1, 0.5, 1)"
+        className="hidden md:block absolute inset-0 transform will-change-transform transition-transform duration-700 cubic-bezier(0.25, 1, 0.5, 1) touch-none"
         style={{
           transform: `translate3d(${pan.x}px, ${pan.y}px, 0px) scale(${zoom})`,
           transformOrigin: '0 0'
         }}
       >
-        
-        {/* Infinite Grid Blueprint Backing */}
         <div className="absolute inset-0 w-[3000px] h-[2000px] bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
 
-        {/* Vector Constellation Path Pipeline Layer */}
         <svg className="absolute inset-0 w-[3000px] h-[2000px] pointer-events-none z-0">
           <path
             d={`M ${experienceNodes[0].x} ${experienceNodes[0].y} 
@@ -231,7 +281,6 @@ export default function Experience() {
           />
         </svg>
 
-        {/* INTERACTIVE TRACKING MAP NODES */}
         {experienceNodes.map((node) => {
           const isSelected = activeNode?.id === node.id
           
@@ -245,7 +294,6 @@ export default function Experience() {
                 zIndex: isSelected ? 50 : 20 
               }}
             >
-              {/* Node Button Pivot Point */}
               <button
                 type="button"
                 onClick={() => handleNodeClick(node)}
@@ -268,11 +316,9 @@ export default function Experience() {
                 </div>
               </button>
 
-              {/* CONTEXTUAL POPUP DATA TRAY CARD */}
               <div className={`absolute left-8 top-0 -translate-y-1/2 data-card transition-all duration-500 origin-left transform ${
                 isSelected ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-90 pointer-events-none'
               }`}>
-                
                 <div className="w-72 bg-[#050914]/95 backdrop-blur-md border border-white/10 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
                   <div className="absolute -right-10 -top-10 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none" />
 
@@ -310,7 +356,6 @@ export default function Experience() {
                         ))}
                       </div>
 
-                      {/* Clean Verification Hyperlink Action Router */}
                       {node.article && (
                         <a 
                           href={node.article}
@@ -324,23 +369,20 @@ export default function Experience() {
                     </div>
                   </div>
                 </div>
-
               </div>
-
             </div>
           )
         })}
-
       </div>
 
-      {/* FOOTER METADATA: Unified Map Instructions Anchor Placement */}
-      <div className="absolute bottom-12 left-16 md:left-20 z-40 pointer-events-none">
+      {/* DESKTOP ONLY FOOTER METADATA UI LAYER (Completely hidden on mobile layout) */}
+      <div className="hidden md:flex absolute bottom-12 md:left-20 z-40 pointer-events-none">
         <div className="flex flex-col gap-1 border-l-2 border-indigo-500/30 pl-4 py-0.5">
           <span className="text-[10px] font-mono font-bold text-slate-500 tracking-wider uppercase">
             Instructions
           </span>
-          <span className="text-xs font-semibold text-slate-400 flex items-center gap-2">
-            Drag to pan • Click node to focus • Press <kbd className="bg-white/10 border border-white/10 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-white">ESC</kbd> to reset view
+          <span className="text-[10px] sm:text-xs font-semibold text-slate-400 flex flex-wrap items-center gap-2">
+            <span>Drag to pan • Click node to focus • Press <kbd className="bg-white/10 border border-white/10 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-white">ESC</kbd> to reset view</span>
           </span>
         </div>
       </div>
