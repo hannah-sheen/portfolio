@@ -7,7 +7,7 @@ import forLanyard from '../assets/images/for_lanyard.jpg'
 function makeNameImage(): string {
   const canvas = document.createElement('canvas')
   canvas.width = 600
-  canvas.height = 800
+  canvas.height = 800 
   const ctx = canvas.getContext('2d')!
   ctx.fillStyle = '#111827'
   ctx.fillRect(0, 0, 600, 800)
