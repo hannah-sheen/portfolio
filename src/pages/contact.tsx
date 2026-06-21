@@ -7,44 +7,32 @@ export default function Contact() {
   const [message, setMessage] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    setStatus('sending')
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    setStatus('sending');
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('/api/email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, subject, message }),
-      })
+      });
 
-      const data = await response.json()
-
-      if (response.ok && data.success) {
-        setStatus('success')
-        setEmail('')
-        setSubject('')
-        setMessage('')
-        
-        setTimeout(() => {
-          setStatus('idle')
-        }, 3000)
+      if (response.ok) {
+        setStatus('success');
+        setEmail('');
+        setSubject('');
+        setMessage('');
       } else {
-        setStatus('error')
-        setTimeout(() => {
-          setStatus('idle')
-        }, 3000)
+        setStatus('error');
       }
     } catch (error) {
-      console.error('Frontend message dispatch error:', error)
-      setStatus('error')
-      setTimeout(() => {
-        setStatus('idle')
-      }, 3000)
+      console.error('Submission error:', error);
+      setStatus('error');
     }
-  }
+  };
 
   return (
     <section 

@@ -1,36 +1,77 @@
-// /api/contact.ts
+import type { IncomingMessage, ServerResponse } from 'http';
 import nodemailer from 'nodemailer';
 
-// Reusable Transporter configured directly inside the serverless layer
-const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST,
-  port: Number(process.env.MAIL_PORT || 587),
-  secure: process.env.MAIL_PORT === '465', 
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-});
+// Helper to parse JSON body since we aren't using Express middleware
+function getRequestBody(req: IncomingMessage): Promise<any> {
+  return new Promise((resolve) => {
+    let body = '';
+    req.on('data', (chunk) => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(body));
+      } catch {
+        resolve({});
+      }
+    });
+  });
+}
 
-export default async function handler(req: any, res: any) {
-  // Enforce POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  // 1. Handle CORS manually (no 'cors' package needed)
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 200;
+    res.end();
+    return;
   }
 
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    res.statusCode = 405;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Method not allowed' }));
+    return;
+  }
+
+  // 2. Parse the body using our helper
+  const body = await getRequestBody(req);
+  const { email, subject, message } = body;
+
+  // Simple validation
+  if (!email || !subject || !message) {
+    res.statusCode = 400;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'All fields are required.' }));
+    return;
+  }
+
+  // 3. Configure Nodemailer transporter (process.env works out of the box on Vercel)
+  const transporter = nodemailer.createTransport({
+    host: process.env.MAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.MAIL_PORT || '587', 10),
+    secure: false, 
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS, 
+    },
+  });
+
   try {
-    const { email, subject, message } = req.body;
-
-    if (!email || !subject || !message) {
-      return res.status(400).json({ error: 'Missing required fields.' });
-    }
-
-    // Send the email using your structured HTML template
     await transporter.sendMail({
-      from: process.env.MAIL_FROM,
+      from: process.env.MAIL_FROM, 
       to: process.env.MAIL_USER, 
-      replyTo: email,            
-      subject: subject, 
+      subject: `[Portfolio Contact Form] ${subject}`,
+      replyTo: email, 
       html: `
         <div style="background-color: #030712; padding: 60px 40px; font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-height: 100vh; width: 100%; box-sizing: border-box; margin: 0;">
           <div style="width: 100%; margin: 0 auto;">
@@ -76,9 +117,13 @@ export default async function handler(req: any, res: any) {
       `,
     });
 
-    return res.status(200).json({ success: true });
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ success: true, message: 'Email dispatched safely!' }));
   } catch (error) {
-    console.error('Mail delivery failure:', error);
-    return res.status(500).json({ error: 'System processing error.' });
+    console.error('Nodemailer error:', error);
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'System failure to send email.' }));
   }
 }
