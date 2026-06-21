@@ -1,8 +1,18 @@
 // /api/contact.ts
-import { transporter } from '../src/utils/mailer';
+import nodemailer from 'nodemailer';
+
+// Transporter configured directly inside the serverless layer
+const transporter = nodemailer.createTransport({
+  host: process.env.MAIL_HOST,
+  port: Number(process.env.MAIL_PORT || 587),
+  secure: process.env.MAIL_PORT === '465',
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+});
 
 export default async function handler(req: any, res: any) {
-  // Enforce POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -14,7 +24,6 @@ export default async function handler(req: any, res: any) {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
 
-    // Dispatch message using your existing transporter singleton
     await transporter.sendMail({
       from: process.env.MAIL_FROM,
       to: process.env.MAIL_USER, 
