@@ -11,10 +11,21 @@ interface ExperienceNode {
   x: number;
   y: number;
   tag: string;
-  article?: string; // Optional field for press coverage verification links
+  article?: string;
 }
 
 const experienceNodes: ExperienceNode[] = [
+ {
+    id: "node-gdg",
+    role: "Logistics Officer",
+    company: "Google Developer Groups on Campus - CTUMC",
+    period: "2024 - 2025",
+    description: "Coordinated event logistics, managed equipment inventory setups, and handled venue preparation for developer bootcamps and tech workshops hosted by our student chapter.",
+    stack: ["Event Coordination", "Inventory Management", "Team Collaboration"],
+    x: 200,
+    y: 180,
+    tag: "0x01"
+  },
   {
     id: "node-1",
     role: "Project Management Lead",
@@ -22,9 +33,9 @@ const experienceNodes: ExperienceNode[] = [
     period: "2025",
     description: "Led BARIOS development. Reduced manual workflows by 90%.",
     stack: ["Project Management", "Systems Delivery", "Workflow Optimization"],
-    x: 300, 
-    y: 280,
-    tag: "0x01"
+    x: 480, 
+    y: 350,
+    tag: "0x02"
   },
   {
     id: "node-2",
@@ -33,9 +44,9 @@ const experienceNodes: ExperienceNode[] = [
     period: "2025",
     description: "Delivered hands-on digital literacy and system training to local personnel in collaboration with the CTU Main CCICT extension team, as covered in official university media.",
     stack: ["Technical Instruction", "System Training", "Tech Adoption"],
-    x: 650,
-    y: 530,
-    tag: "0x02",
+    x: 800,
+    y: 580,
+    tag: "0x03",
     article: "https://www.ctu.edu.ph/ctu-main-ccict-equips-barangay-san-roque-personnel-with-essential-digital-skills/"
   },
   {
@@ -45,9 +56,9 @@ const experienceNodes: ExperienceNode[] = [
     period: "2026",
     description: "Engineered backend logic using Pascal and SQL engines.",
     stack: ["Pascal", "SQL", "Database Optimization"],
-    x: 1000,
-    y: 230,
-    tag: "0x03"
+    x: 1150,
+    y: 280,
+    tag: "0x04"
   },
   {
     id: "node-4",
@@ -56,9 +67,9 @@ const experienceNodes: ExperienceNode[] = [
     period: "2026",
     description: "Explored enterprise workflows. Learned prompt engineering, efficient coding, and scaling with modern AI tools.",
     stack: ["AI Tools", "Prompt Engineering", "Efficient Coding"],
-    x: 1400,
-    y: 480,
-    tag: "0x04"
+    x: 1500,
+    y: 500,
+    tag: "0x05"
   }
 ]
 
@@ -99,7 +110,7 @@ export default function Experience() {
       const firstNode = experienceNodes[0]
       setActiveNode(firstNode)
       setTimeout(() => {
-        focusOnCoordinates(firstNode.x, firstNode.y, 1.1)
+        focusOnCoordinates(firstNode.x, firstNode.y, 1.0)
       }, 150)
     }
     return () => { document.body.removeAttribute('data-dragging') }
@@ -174,45 +185,55 @@ export default function Experience() {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={stopGlobalDragState}
-      className={`w-full h-screen bg-[#030712] relative flex flex-col justify-start overflow-hidden select-none ${
+      /* Match margins around content: added px-6 md:px-24, plus layout structure alignment */
+      className={`w-full min-h-screen md:h-screen bg-[#030712] text-white px-6 md:px-24 flex flex-col justify-start overflow-y-auto md:overflow-hidden select-none relative ${
         isDragging ? 'md:cursor-grabbing' : 'md:cursor-grab'
       }`}
       style={{ fontFamily: "'Manrope', sans-serif" }}
     >
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-[size:45px_45px]" />
+      </div>
       
-      {/* HUD HEADER COMPONENT LAYER */}
-      <div className="pt-8 px-5 sm:px-12 md:pt-16 md:px-0 md:absolute md:top-16 md:left-20 z-40 max-w-xl space-y-0.5 shrink-0">
-        <div className="py-0.5 cursor-default">
-          <Shuffle
-            text="EXPERIENCE"
-            tag="h2"
-            className="text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none"
-            style={{ fontWeight: 950 }}
-          />
+      {/* HUD HEADER COMPONENT LAYER - Matched to Projects Layout Alignment exactly */}
+      <div className="w-full flex flex-col items-start text-left pt-8 md:pt-16 space-y-1 shrink-0 z-40 md:absolute md:top-0 md:left-24 md:max-w-xl pointer-events-none">
+        <div className="space-y-0.5 pointer-events-auto">
+          <div className="py-0.5 cursor-default">
+            <Shuffle
+              text="EXPERIENCE"
+              tag="h2"
+              className="text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none"
+              style={{ fontWeight: 950 }}
+            />
+          </div>
+          <div className="py-0.5 flex items-center gap-4 cursor-default">
+            <Shuffle
+              text="& Systems Track"
+              tag="span"
+              className="block text-3xl sm:text-5xl md:text-6xl font-extralight text-indigo-300 italic tracking-wide leading-none"
+              style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
+            />
+          </div>
         </div>
-        <div className="py-0.5 flex items-center gap-4 cursor-default">
-          <Shuffle
-            text="& Systems Track"
-            tag="span"
-            className="block text-3xl sm:text-5xl md:text-6xl font-extralight text-indigo-300 italic tracking-wide leading-none"
-            style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
-          />
-        </div>
+
+        <p className="text-xs sm:text-sm leading-relaxed text-slate-400 font-medium max-w-xl pt-3 normal-case pointer-events-none">
+          A trace of backend architecture builds, technical systems infrastructure development, and corporate ecosystem engineering milestones.
+        </p>
       </div>
 
-      {/* MOBILE COMPACT CARDS GRID: Dynamic Scaling Container (No Overflows/Scrollbars) */}
-      <div className="flex md:hidden flex-col justify-between flex-1 max-h-[calc(100vh-130px)] gap-2 px-5 pt-2 pb-6 w-full z-30">
+      {/* MOBILE SCROLLABLE TIMELINE FEED */}
+      <div className="flex md:hidden flex-col gap-4 pt-6 pb-12 w-full z-30">
         {experienceNodes.map((node) => (
           <div 
             key={`mobile-${node.id}`}
-            className="w-full flex-1 min-h-0 bg-[#050914]/80 backdrop-blur-md border border-white/5 rounded-xl p-3 flex flex-col justify-center relative overflow-hidden shadow-md"
+            className="w-full bg-[#050914]/80 backdrop-blur-md border border-white/5 rounded-xl p-4 flex flex-col relative overflow-hidden shadow-md"
           >
             <div className="absolute right-0 top-0 w-16 h-16 bg-indigo-500/5 rounded-full blur-lg pointer-events-none" />
             
-            <div className="space-y-1">
+            <div className="space-y-3">
               <div>
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-[11px] font-bold text-white tracking-tight leading-tight truncate">
+                <div className="flex items-start justify-between gap-4">
+                  <h3 className="text-xs font-bold text-white tracking-tight leading-tight">
                     {node.role}
                   </h3>
                   <span className="text-indigo-400 font-mono text-[9px] font-bold tracking-wider shrink-0 bg-indigo-500/10 px-1.5 py-0.5 rounded">
@@ -220,22 +241,21 @@ export default function Experience() {
                   </span>
                 </div>
                 
-                <div className="text-[9px] font-mono text-slate-400 font-semibold opacity-90 truncate mt-0.5">
+                <div className="text-[10px] font-mono text-slate-400 font-semibold opacity-90 mt-1">
                   {node.company}
                 </div>
               </div>
 
-              <p className="text-[10px] text-slate-400 leading-normal font-light normal-case line-clamp-3">
+              <p className="text-[11px] text-slate-400 leading-relaxed font-light normal-case">
                 {node.description}
               </p>
 
-              <div className="flex items-center justify-between gap-2 pt-1">
-                {/* Displays every tech stack item layout inline smoothly without truncation */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                 <div className="flex flex-wrap gap-1">
                   {node.stack.map((tech) => (
                     <span 
                       key={`mobile-tech-${tech}`} 
-                      className="text-[8px] font-mono bg-white/5 border border-white/5 text-slate-300 px-1.5 py-0.2 rounded tracking-wide shrink-0"
+                      className="text-[8px] font-mono bg-white/5 border border-white/5 text-slate-300 px-2 py-0.5 rounded tracking-wide shrink-0"
                     >
                       {tech}
                     </span>
@@ -247,7 +267,7 @@ export default function Experience() {
                     href={node.article}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[9px] font-mono font-bold tracking-wider text-indigo-400 hover:text-indigo-300 transition-colors shrink-0 whitespace-nowrap pl-2"
+                    className="text-[10px] font-mono font-bold tracking-wider text-indigo-400 hover:text-indigo-300 transition-colors shrink-0 whitespace-nowrap pt-1"
                   >
                     PRESS ➔
                   </a>
@@ -273,7 +293,8 @@ export default function Experience() {
             d={`M ${experienceNodes[0].x} ${experienceNodes[0].y} 
                 L ${experienceNodes[1].x} ${experienceNodes[1].y} 
                 L ${experienceNodes[2].x} ${experienceNodes[2].y} 
-                L ${experienceNodes[3].x} ${experienceNodes[3].y}`}
+                L ${experienceNodes[3].x} ${experienceNodes[3].y}
+                L ${experienceNodes[4].x} ${experienceNodes[4].y}`}
             fill="none"
             stroke="rgba(99, 102, 241, 0.15)"
             strokeWidth="1.5"
@@ -319,7 +340,7 @@ export default function Experience() {
               <div className={`absolute left-8 top-0 -translate-y-1/2 data-card transition-all duration-500 origin-left transform ${
                 isSelected ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-90 pointer-events-none'
               }`}>
-                <div className="w-72 bg-[#050914]/95 backdrop-blur-md border border-white/10 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
+                <div className="w-80 bg-[#050914]/95 backdrop-blur-md border border-white/10 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
                   <div className="absolute -right-10 -top-10 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none" />
 
                   <div className="space-y-3">
@@ -375,8 +396,8 @@ export default function Experience() {
         })}
       </div>
 
-      {/* DESKTOP ONLY FOOTER METADATA UI LAYER (Completely hidden on mobile layout) */}
-      <div className="hidden md:flex absolute bottom-12 md:left-20 z-40 pointer-events-none">
+      {/* DESKTOP ONLY FOOTER METADATA UI LAYER */}
+      <div className="hidden md:flex absolute bottom-12 md:left-24 z-40 pointer-events-none">
         <div className="flex flex-col gap-1 border-l-2 border-indigo-500/30 pl-4 py-0.5">
           <span className="text-[10px] font-mono font-bold text-slate-500 tracking-wider uppercase">
             Instructions
