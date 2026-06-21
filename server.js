@@ -1,77 +1,43 @@
-import type { IncomingMessage, ServerResponse } from 'http';
-import nodemailer from 'nodemailer';
+import 'dotenv/config'; // Automatically loads your .env variables
+import express from 'express';
+import cors from 'cors';
+import nodemailer from 'nodemailer'; 
 
-// Helper to parse JSON body since we aren't using Express middleware
-function getRequestBody(req: IncomingMessage): Promise<any> {
-  return new Promise((resolve) => {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
-      try {
-        resolve(JSON.parse(body));
-      } catch {
-        resolve({});
-      }
-    });
-  });
-}
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  // 1. Handle CORS manually (no 'cors' package needed)
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+// Reusable Transporter from your nodemailer-setup.md
+const transporter = nodemailer.createTransport({
+  host: process.env.MAIL_HOST,
+  port: Number(process.env.MAIL_PORT),
+  secure: process.env.MAIL_PORT === '465',
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+});
 
-  // Handle preflight OPTIONS request
-  if (req.method === 'OPTIONS') {
-    res.statusCode = 200;
-    res.end();
-    return;
-  }
+// Verify mail server connection on startup
+transporter.verify((err) => {
+  if (err) console.error('Mail server connection failed:', err);
+  else console.log('Mail server ready to send emails');
+});
 
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    res.statusCode = 405;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ error: 'Method not allowed' }));
-    return;
-  }
-
-  // 2. Parse the body using our helper
-  const body = await getRequestBody(req);
-  const { email, subject, message } = body;
-
-  // Simple validation
-  if (!email || !subject || !message) {
-    res.statusCode = 400;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ error: 'All fields are required.' }));
-    return;
-  }
-
-  // 3. Configure Nodemailer transporter (process.env works out of the box on Vercel)
-  const transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.MAIL_PORT || '587', 10),
-    secure: false, 
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASS, 
-    },
-  });
-
+// The API endpoint your Vite contact form will send data to
+app.post('/api/contact', async (req, res) => {
   try {
+    const { email, subject, message } = req.body;
+
+    if (!email || !subject || !message) {
+      return res.status(400).json({ error: 'Missing required fields.' });
+    }
+
     await transporter.sendMail({
-      from: process.env.MAIL_FROM, 
+      from: process.env.MAIL_FROM,
       to: process.env.MAIL_USER, 
-      subject: `[Portfolio Contact Form] ${subject}`,
-      replyTo: email, 
+      replyTo: email,            
+      subject: subject, 
       html: `
         <div style="background-color: #030712; padding: 60px 40px; font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-height: 100vh; width: 100%; box-sizing: border-box; margin: 0;">
           <div style="width: 100%; margin: 0 auto;">
@@ -117,13 +83,13 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       `,
     });
 
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ success: true, message: 'Email dispatched safely!' }));
+    return res.status(200).json({ success: true });
   } catch (error) {
-    console.error('Nodemailer error:', error);
-    res.statusCode = 500;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ error: 'System failure to send email.' }));
+    console.error('Mail delivery failure:', error);
+    return res.status(500).json({ error: 'System processing error.' });
   }
-}
+});
+
+// Start the server on port 5000
+const PORT = 5000;
+app.listen(PORT, () => console.log(`Backend server running on http://localhost:${PORT}`));
