@@ -209,10 +209,14 @@ interface Message {
 }
 
 interface ChatbotProps {
+  isOpen: boolean;
   onClose: () => void;
 }
 
-export default function Chatbot({ onClose }: ChatbotProps) {
+export default function Chatbot({ isOpen, onClose }: ChatbotProps) {
+  // Guard clause: If the parent state controls visibility, do not render markup when closed
+  if (!isOpen) return null;
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'init-1',
