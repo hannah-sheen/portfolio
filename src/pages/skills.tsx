@@ -7,6 +7,7 @@ import uxDesign from '../assets/certifications/Foundations of UX Design.jpeg'
 import githubVc from '../assets/certifications/Github_Version_Control.png'
 import nasaCert from '../assets/certifications/NASA Certificate.jpg'
 import networkingBasics from '../assets/certifications/Networking_Basics.png'
+import crashCoursePython from '../assets/certifications/Crash_Course_on_Python.png'
 
 interface SkillCategory {
   title: string;
@@ -42,6 +43,7 @@ const certificationImages: CertificationItem[] = [
   { title: "Foundations of UX Design", image: uxDesign },
   { title: "GitHub Version Control", image: githubVc },
   { title: "NASA Space Apps Challenge", image: nasaCert },
+  { title: "Google Crash Course on Python", image: crashCoursePython },
   { title: "Networking Basics", image: networkingBasics }
 ]
 

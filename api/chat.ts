@@ -32,11 +32,13 @@ PROFILE META:
 2. CERTIFICATIONS & CREDENTIALS:
 - ASEAN AI MAPUA Workshop (Focused on "Human-Centric AI and Regional Problem Solving" 2026 at Mapua MCL Global Classroom alongside Arizona State University, PUP, and Duy Tan University).
 - Google Foundations of UX Design (via Coursera).
+- Google Crash Course on Python (via Coursera).
 - GitHub Version Control credential from Google Developer Groups on Campus-CTU.
 - NASA Space Apps Challenge (Earned the Galactic Problem Solver award in the 2024 International challenge).
 - Networking Basics from the Cisco Networking Academy.
 
 3. PROFESSIONAL TIMELINE & EXPERIENCE:
+- Logistics Officer at Google Developer Groupcs on Campus-CTU (2024-2025): Coordinated event logistics, managed equipment inventory setups, and handled venue preparation for developer bootcamps and tech workshops hosted by our student chapter.
 - Project Management Lead at Cebu Technological University (2025): Led the infrastructure development for the BARIOS system, successfully optimizing administrative processes and slashing manual workflows by 90%.
 - Technical Instructor at Brgy. San Roque (2025): Delivered critical hands-on digital literacy and systems training to local government staff in partnership with the CTU Main CCICT extension team (featured in official university press).
 - Back End Intern at Camtastic Philippines Corp. (2026): Engineered secure core backend structural logic utilizing legacy Pascal environments integrated with standalone SQL database engines.
