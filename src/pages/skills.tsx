@@ -7,7 +7,7 @@ import uxDesign from '../assets/certifications/Foundations of UX Design.jpeg'
 import githubVc from '../assets/certifications/Github_Version_Control.png'
 import nasaCert from '../assets/certifications/NASA Certificate.jpg'
 import networkingBasics from '../assets/certifications/Networking_Basics.png'
-import crashCoursePython from '../assets/certifications/Crash_Course_on_Python.png'
+import crashCoursePython from '../assets/certifications/Crash_Course_on_Python.jpeg'
 
 interface SkillCategory {
   title: string;
