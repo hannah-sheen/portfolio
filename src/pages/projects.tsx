@@ -62,7 +62,7 @@ const projectsData: ProjectItem[] = [
     solution: "Wrote custom graph-traversal cellular automata directly in GDScript and integrated Gemini AI APIs into the pre-build pipeline to seed unique item variations.",
     stack: ["Godot", "GDScript", "Kenney Assets", "Gemini AI"],
     images: [imgTheArchivist, imgTheArchivist2, imgTheArchivist3],
-    github: "https://github.com/hannah-sheen"
+    github: "https://github.com/hannah-sheen/tas"
   },
   {
     id: "proj-3",
